@@ -1,50 +1,36 @@
 import { getPublicStatus } from "@/lib/data/public-status";
-import { StatusBadge } from "@/components/status-badge";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { formatBRL } from "@/lib/utils/currency";
 import { formatReferenceMonth } from "@/lib/utils/month";
+import { PlayerPaymentCard } from "./player-payment-card";
 
 export const dynamic = "force-dynamic";
 
 export default async function PublicStatusPage() {
-  const { teamName, referenceMonth, players, caixinhaContributions, totals } = await getPublicStatus();
+  const { teamName, defaultMensalidadeAmount, referenceMonth, players, caixinhaContributions, totals } =
+    await getPublicStatus();
 
   return (
     <main className="mx-auto min-h-screen max-w-2xl px-4 py-10">
       <div className="mb-8 flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-foreground">{teamName}</h1>
-          <p className="text-sm text-muted">Situação da mensalidade — {formatReferenceMonth(referenceMonth)}</p>
+          <h1 className="text-2xl font-semibold text-primary">{teamName}</h1>
+          <p className="text-sm text-muted">
+            Mensalidade de {formatReferenceMonth(referenceMonth)} — clique no seu nome pra pagar
+          </p>
         </div>
         <ThemeToggle />
       </div>
 
-      <div className="mb-8 overflow-hidden rounded-xl border border-border bg-surface">
-        <table className="w-full text-sm">
-          <thead className="border-b border-border bg-surface-2 text-left text-xs text-muted">
-            <tr>
-              <th className="px-4 py-2 font-medium">Jogador</th>
-              <th className="px-4 py-2 font-medium">Mensalidade</th>
-            </tr>
-          </thead>
-          <tbody>
-            {players.map((player) => (
-              <tr key={player.id} className="border-b border-border last:border-0">
-                <td className="px-4 py-3 text-foreground">{player.name}</td>
-                <td className="px-4 py-3">
-                  <StatusBadge status={player.status} />
-                </td>
-              </tr>
-            ))}
-            {players.length === 0 && (
-              <tr>
-                <td colSpan={2} className="px-4 py-6 text-center text-muted">
-                  Nenhum jogador cadastrado ainda.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+      <div className="mb-8 space-y-3">
+        {players.map((player) => (
+          <PlayerPaymentCard key={player.id} player={player} defaultMensalidadeAmount={defaultMensalidadeAmount} />
+        ))}
+        {players.length === 0 && (
+          <p className="rounded-xl border border-border bg-surface px-4 py-6 text-center text-muted">
+            Nenhum jogador cadastrado ainda.
+          </p>
+        )}
       </div>
 
       {caixinhaContributions.length > 0 && (

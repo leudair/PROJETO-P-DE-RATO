@@ -12,7 +12,7 @@ export async function getPublicStatus() {
 
   const [{ data: settings }, { data: players, error: playersError }, { data: payments, error: paymentsError }] =
     await Promise.all([
-      admin.from("team_settings").select("team_name").eq("id", 1).single(),
+      admin.from("team_settings").select("team_name, default_mensalidade_amount").eq("id", 1).single(),
       admin.from("players").select("id, name").eq("active", true).order("name", { ascending: true }),
       admin
         .from("payments")
@@ -51,6 +51,7 @@ export async function getPublicStatus() {
 
   return {
     teamName: settings?.team_name ?? "Meu Time",
+    defaultMensalidadeAmount: settings?.default_mensalidade_amount ?? 0,
     referenceMonth,
     players: playerStatus,
     caixinhaContributions,

@@ -3,21 +3,25 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --team-green: #1a7f37;
-  --team-green-light: #2da44e;
-  --team-green-dark: #0f5223;
+  --team-blue: #1d4ed8;
+  --team-blue-light: #2563eb;
+  --team-blue-dark: #1e3a8a;
+  --team-yellow: #eab308;
+  --team-yellow-light: #facc15;
   --team-black: #0a0a0b;
   --team-white: #ffffff;
 
   --background: var(--team-white);
   --foreground: var(--team-black);
   --surface: #ffffff;
-  --surface-2: #f5f6f5;
-  --border-color: rgba(26, 127, 55, 0.25);
+  --surface-2: #f5f6fa;
+  --border-color: rgba(29, 78, 216, 0.2);
   --muted: #6b6b70;
-  --primary: var(--team-green);
+  --primary: var(--team-blue);
   --primary-foreground: var(--team-white);
-  --success: #1a7f37;
+  --accent: var(--team-yellow);
+  --accent-foreground: #1a1500;
+  --success: #16a34a;
   --success-foreground: #ffffff;
   --pending: #b45309;
   --pending-foreground: #ffffff;
@@ -28,11 +32,13 @@
   --foreground: #ededef;
   --surface: #141416;
   --surface-2: #1d1d20;
-  --border-color: rgba(45, 164, 78, 0.3);
+  --border-color: rgba(37, 99, 235, 0.35);
   --muted: #9a9a9e;
-  --primary: var(--team-green-light);
+  --primary: var(--team-blue-light);
   --primary-foreground: var(--team-white);
-  --success: #2da44e;
+  --accent: var(--team-yellow-light);
+  --accent-foreground: #1a1500;
+  --success: #22c55e;
   --success-foreground: #ffffff;
   --pending: #d97706;
   --pending-foreground: #ffffff;
@@ -47,6 +53,8 @@
   --color-muted: var(--muted);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
   --color-success: var(--success);
   --color-success-foreground: var(--success-foreground);
   --color-pending: var(--pending);

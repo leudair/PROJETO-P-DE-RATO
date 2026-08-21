@@ -4,15 +4,18 @@ import { useActionState, useState } from "react";
 import { payCaixinhaAction, payMensalidadeAction, type PayState } from "./actions";
 import { StatusBadge } from "@/components/status-badge";
 import { formatBRL } from "@/lib/utils/currency";
+import { POSITION_LABEL } from "@/lib/utils/positions";
+import type { PlayerPosition } from "@/lib/supabase/database.types";
 
 export function PlayerPaymentCard({
   player,
   defaultMensalidadeAmount,
 }: {
-  player: { id: string; name: string; status: "paid" | "pending" };
+  player: { id: string; name: string; position: PlayerPosition | null; status: "paid" | "pending" | "exempt" };
   defaultMensalidadeAmount: number;
 }) {
   const [open, setOpen] = useState(false);
+  const isGoalkeeper = player.position === "goleiro";
   const [mensalidadeState, mensalidadeAction, mensalidadePending] = useActionState(
     payMensalidadeAction.bind(null, player.id),
     undefined
@@ -29,7 +32,10 @@ export function PlayerPaymentCard({
         onClick={() => setOpen((v) => !v)}
         className="flex w-full items-center justify-between px-4 py-3 text-left"
       >
-        <span className="font-medium text-foreground">{player.name}</span>
+        <div>
+          <span className="font-medium text-foreground">{player.name}</span>
+          {player.position && <p className="text-xs text-muted">{POSITION_LABEL[player.position]}</p>}
+        </div>
         <div className="flex items-center gap-3">
           <StatusBadge status={player.status} />
           <span className="text-xs text-muted">{open ? "Fechar" : "Pagar"}</span>
@@ -38,25 +44,29 @@ export function PlayerPaymentCard({
 
       {open && (
         <div className="space-y-5 border-t border-border p-4">
-          <div>
-            <p className="mb-2 text-sm text-foreground">Mensalidade do mês</p>
-            {player.status === "paid" ? (
-              <p className="text-sm text-success">Mensalidade já paga. Obrigado! ⚽</p>
-            ) : (
-              <form action={mensalidadeAction}>
-                <button
-                  type="submit"
-                  disabled={mensalidadePending}
-                  className="rounded-md bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground disabled:opacity-50"
-                >
-                  {mensalidadePending
-                    ? "Gerando Pix..."
-                    : `Pagar mensalidade — ${formatBRL(defaultMensalidadeAmount)}`}
-                </button>
-              </form>
-            )}
-            <PixResult state={mensalidadeState} />
-          </div>
+          {!isGoalkeeper && (
+            <div>
+              <p className="mb-2 text-sm text-foreground">Mensalidade do mês</p>
+              {player.status === "paid" ? (
+                <p className="text-sm text-success">Mensalidade já paga. Obrigado! ⚽</p>
+              ) : (
+                <form action={mensalidadeAction}>
+                  <button
+                    type="submit"
+                    disabled={mensalidadePending}
+                    className="rounded-md bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground disabled:opacity-50"
+                  >
+                    {mensalidadePending
+                      ? "Gerando Pix..."
+                      : `Pagar mensalidade — ${formatBRL(defaultMensalidadeAmount)}`}
+                  </button>
+                </form>
+              )}
+              <PixResult state={mensalidadeState} />
+            </div>
+          )}
+
+          {isGoalkeeper && <p className="text-sm text-muted">Goleiro é isento da mensalidade. 🧤</p>}
 
           <div>
             <p className="mb-2 text-sm text-foreground">Dar uma caixinha</p>

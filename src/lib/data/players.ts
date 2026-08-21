@@ -2,12 +2,17 @@ import "server-only";
 import * as z from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { requireAdmin } from "./auth";
+import { POSITIONS } from "@/lib/utils/positions";
 
 export const CreatePlayerSchema = z.object({
   name: z.string().trim().min(1, "Informe o nome."),
   phone: z
     .string()
     .trim()
+    .optional()
+    .transform((v) => (v ? v : null)),
+  position: z
+    .union([z.enum(POSITIONS), z.literal("")])
     .optional()
     .transform((v) => (v ? v : null)),
 });
@@ -40,7 +45,9 @@ export async function createPlayer(input: z.infer<typeof CreatePlayerSchema>) {
   await requireAdmin();
   const supabase = await createClient();
 
-  const { error } = await supabase.from("players").insert({ name: input.name, phone: input.phone });
+  const { error } = await supabase
+    .from("players")
+    .insert({ name: input.name, phone: input.phone, position: input.position });
 
   if (error) throw error;
 }
@@ -51,7 +58,7 @@ export async function updatePlayer(input: z.infer<typeof UpdatePlayerSchema>) {
 
   const { error } = await supabase
     .from("players")
-    .update({ name: input.name, phone: input.phone })
+    .update({ name: input.name, phone: input.phone, position: input.position })
     .eq("id", input.playerId);
 
   if (error) throw error;

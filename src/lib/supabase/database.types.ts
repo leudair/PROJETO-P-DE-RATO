@@ -7,6 +7,7 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 
 export type PaymentType = "mensalidade" | "caixinha";
 export type PaymentStatus = "pending" | "paid" | "cancelled";
+export type PlayerPosition = "goleiro" | "zagueiro" | "lateral" | "volante" | "meia" | "atacante";
 
 export interface Database {
   public: {
@@ -58,6 +59,7 @@ export interface Database {
           id: string;
           name: string;
           phone: string | null;
+          position: PlayerPosition | null;
           active: boolean;
           created_at: string;
         };
@@ -65,6 +67,7 @@ export interface Database {
           id?: string;
           name: string;
           phone?: string | null;
+          position?: PlayerPosition | null;
           active?: boolean;
           created_at?: string;
         };
@@ -72,6 +75,7 @@ export interface Database {
           id?: string;
           name?: string;
           phone?: string | null;
+          position?: PlayerPosition | null;
           active?: boolean;
           created_at?: string;
         };
@@ -126,6 +130,39 @@ export interface Database {
             referencedColumns: ["id"];
           },
         ];
+      };
+      pickup_game_contributions: {
+        Row: {
+          id: string;
+          amount: number;
+          status: PaymentStatus;
+          mercado_pago_payment_id: string | null;
+          pix_qr_code: string | null;
+          pix_copy_paste: string | null;
+          paid_at: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          amount: number;
+          status?: PaymentStatus;
+          mercado_pago_payment_id?: string | null;
+          pix_qr_code?: string | null;
+          pix_copy_paste?: string | null;
+          paid_at?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          amount?: number;
+          status?: PaymentStatus;
+          mercado_pago_payment_id?: string | null;
+          pix_qr_code?: string | null;
+          pix_copy_paste?: string | null;
+          paid_at?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
       };
     };
     Views: Record<string, never>;

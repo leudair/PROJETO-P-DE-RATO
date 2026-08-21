@@ -18,17 +18,21 @@ export const PublicCaixinhaSchema = z.object({
 });
 
 async function assertActivePlayer(admin: SupabaseClient<Database>, playerId: string) {
-  const { data, error } = await admin.from("players").select("id, active").eq("id", playerId).single();
+  const { data, error } = await admin.from("players").select("id, active, position").eq("id", playerId).single();
   if (error || !data || !data.active) {
     throw new Error("Jogador inválido.");
   }
+  return data;
 }
 
 const UNIQUE_VIOLATION = "23505";
 
 export async function getOrCreatePendingMensalidade(playerId: string) {
   const admin = createAdminClient();
-  await assertActivePlayer(admin, playerId);
+  const player = await assertActivePlayer(admin, playerId);
+  if (player.position === "goleiro") {
+    throw new Error("Goleiro é isento da mensalidade.");
+  }
   const referenceMonth = currentReferenceMonth();
 
   const { data: existing, error: existingError } = await admin

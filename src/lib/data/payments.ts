@@ -48,11 +48,16 @@ export async function generateMonthlyCharges(referenceMonth: string) {
   const supabase = await createClient();
   const settings = await getTeamSettings();
 
-  const { data: activePlayers, error: playersError } = await supabase
+  // Goleiro e' isento da mensalidade — nunca gerar cobranca pra ele. Filtra
+  // no JS (nao com .neq() no Postgres) porque `position <> 'goleiro'` no SQL
+  // exclui erroneamente jogadores com position NULL (comparacao com NULL
+  // nunca e' verdadeira) — a maioria dos jogadores sem posicao definida.
+  const { data: allActivePlayers, error: playersError } = await supabase
     .from("players")
-    .select("id")
+    .select("id, position")
     .eq("active", true);
   if (playersError) throw playersError;
+  const activePlayers = allActivePlayers.filter((p) => p.position !== "goleiro");
 
   const { data: existing, error: existingError } = await supabase
     .from("payments")

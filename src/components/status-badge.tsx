@@ -2,12 +2,14 @@ const LABEL: Record<string, string> = {
   paid: "Pago",
   pending: "Pendente",
   cancelled: "Cancelado",
+  exempt: "Isento",
 };
 
 const STYLE: Record<string, string> = {
   paid: "bg-success/10 text-success",
   pending: "bg-pending/10 text-pending",
   cancelled: "bg-muted/10 text-muted",
+  exempt: "bg-muted/10 text-muted",
 };
 
 export function StatusBadge({ status }: { status: string }) {

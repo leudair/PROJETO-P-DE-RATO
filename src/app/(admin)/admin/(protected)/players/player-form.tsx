@@ -2,13 +2,15 @@
 
 import { useActionState } from "react";
 import { createPlayerAction, updatePlayerAction, type PlayerFormState } from "./actions";
+import { POSITIONS, POSITION_LABEL } from "@/lib/utils/positions";
+import type { PlayerPosition } from "@/lib/supabase/database.types";
 
 export function PlayerForm({
   mode,
   defaultValues,
 }: {
   mode: "create" | "edit";
-  defaultValues?: { playerId: string; name: string; phone: string | null };
+  defaultValues?: { playerId: string; name: string; phone: string | null; position: PlayerPosition | null };
 }) {
   const action = mode === "create" ? createPlayerAction : updatePlayerAction;
   const [state, formAction, pending] = useActionState<PlayerFormState, FormData>(action, undefined);
@@ -36,6 +38,23 @@ export function PlayerForm({
             className="w-full rounded-md border border-border px-3 py-2 text-sm"
           />
         </div>
+      </div>
+
+      <div className="space-y-1">
+        <label className="text-xs font-medium text-foreground">Posição</label>
+        <select
+          name="position"
+          defaultValue={defaultValues?.position ?? ""}
+          className="w-full rounded-md border border-border px-3 py-2 text-sm"
+        >
+          <option value="">Não informada</option>
+          {POSITIONS.map((position) => (
+            <option key={position} value={position}>
+              {POSITION_LABEL[position]}
+            </option>
+          ))}
+        </select>
+        <p className="text-xs text-muted">Goleiro fica isento da mensalidade automaticamente.</p>
       </div>
 
       {state?.error && <p className="text-sm text-red-600">{state.error}</p>}

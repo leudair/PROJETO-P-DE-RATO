@@ -18,6 +18,7 @@ export async function createPlayerAction(
   const parsed = CreatePlayerSchema.safeParse({
     name: formData.get("name"),
     phone: formData.get("phone"),
+    position: formData.get("position"),
   });
 
   if (!parsed.success) {
@@ -42,6 +43,7 @@ export async function updatePlayerAction(
     playerId: formData.get("playerId"),
     name: formData.get("name"),
     phone: formData.get("phone"),
+    position: formData.get("position"),
   });
 
   if (!parsed.success) {

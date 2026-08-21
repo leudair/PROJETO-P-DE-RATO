@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { listPlayers } from "@/lib/data/players";
 import { ToggleActiveButton } from "./toggle-active-button";
+import { POSITION_LABEL } from "@/lib/utils/positions";
 
 export default async function PlayersPage() {
   const players = await listPlayers();
@@ -25,6 +26,7 @@ export default async function PlayersPage() {
           <thead className="border-b border-border bg-surface-2 text-left text-xs text-muted">
             <tr>
               <th className="px-4 py-2 font-medium">Nome</th>
+              <th className="px-4 py-2 font-medium">Posição</th>
               <th className="px-4 py-2 font-medium">Telefone</th>
               <th className="px-4 py-2 font-medium">Status</th>
               <th className="px-4 py-2 font-medium"></th>
@@ -37,6 +39,9 @@ export default async function PlayersPage() {
                   <Link href={`/admin/players/${player.id}`} className="text-foreground hover:underline">
                     {player.name}
                   </Link>
+                </td>
+                <td className="px-4 py-3 text-muted">
+                  {player.position ? POSITION_LABEL[player.position] : "—"}
                 </td>
                 <td className="px-4 py-3 text-muted">{player.phone ?? "—"}</td>
                 <td className="px-4 py-3">
@@ -51,7 +56,7 @@ export default async function PlayersPage() {
             ))}
             {players.length === 0 && (
               <tr>
-                <td colSpan={4} className="px-4 py-6 text-center text-muted">
+                <td colSpan={5} className="px-4 py-6 text-center text-muted">
                   Nenhum jogador cadastrado ainda.
                 </td>
               </tr>

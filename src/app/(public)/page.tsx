@@ -3,6 +3,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { formatBRL } from "@/lib/utils/currency";
 import { formatReferenceMonth } from "@/lib/utils/month";
 import { PlayerPaymentCard } from "./player-payment-card";
+import { PickupGameBanner } from "./pickup-game-banner";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +22,8 @@ export default async function PublicStatusPage() {
         </div>
         <ThemeToggle />
       </div>
+
+      <PickupGameBanner />
 
       <div className="mb-8 space-y-3">
         {players.map((player) => (

@@ -13,7 +13,7 @@ export async function getPublicStatus() {
   const [{ data: settings }, { data: players, error: playersError }, { data: payments, error: paymentsError }] =
     await Promise.all([
       admin.from("team_settings").select("team_name, default_mensalidade_amount").eq("id", 1).single(),
-      admin.from("players").select("id, name").eq("active", true).order("name", { ascending: true }),
+      admin.from("players").select("id, name, position").eq("active", true).order("name", { ascending: true }),
       admin
         .from("payments")
         .select("player_id, type, amount, status")
@@ -29,10 +29,16 @@ export async function getPublicStatus() {
 
   const playerStatus = players.map((player) => {
     const payment = mensalidadeByPlayer.get(player.id);
+    const isGoalkeeper = player.position === "goleiro";
     return {
       id: player.id,
       name: player.name,
-      status: payment?.status === "paid" ? ("paid" as const) : ("pending" as const),
+      position: player.position,
+      status: isGoalkeeper
+        ? ("exempt" as const)
+        : payment?.status === "paid"
+          ? ("paid" as const)
+          : ("pending" as const),
     };
   });
 

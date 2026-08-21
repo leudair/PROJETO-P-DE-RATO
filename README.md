@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Caixa do Time
 
-## Getting Started
+Site para controlar a mensalidade e a caixinha do time: cobrança via Pix
+(Mercado Pago) e uma página pública mostrando quem já pagou.
 
-First, run the development server:
+- **Painel admin** (`/admin`): cadastro de jogadores, geração de cobranças
+  (mensalidade do mês / caixinha avulsa), geração de Pix e confirmação de
+  pagamento automática via webhook do Mercado Pago.
+- **Página pública** (`/`): sem login, mostra o status de pagamento de cada
+  jogador no mês e o total arrecadado.
+
+Stack: Next.js 16 (App Router) + Supabase + Tailwind CSS v4.
+
+## Rodando localmente
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Copie `.env.local.example` para `.env.local` e preencha os valores (veja os
+checklists abaixo). Sem um projeto Supabase real configurado, o app builda e
+o admin renderiza, mas qualquer consulta ao banco falha em runtime — isso é
+esperado até o checklist do Supabase ser concluído.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Checklist: Supabase (obrigatório para o app funcionar de verdade)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Criar um projeto em [supabase.com/dashboard](https://supabase.com/dashboard).
+2. Preencher em `.env.local`: `NEXT_PUBLIC_SUPABASE_URL`,
+   `NEXT_PUBLIC_SUPABASE_ANON_KEY` e `SUPABASE_SERVICE_ROLE_KEY` (em
+   Project Settings > API).
+3. Aplicar a migration: `npx supabase link` e depois
+   `npx supabase db push` (ou rodar o conteúdo de
+   `supabase/migrations/0001_init.sql` direto no SQL Editor do Supabase).
+4. Gerar os tipos reais (substitui o `database.types.ts` escrito à mão):
+   ```bash
+   npx supabase gen types typescript --linked > src/lib/supabase/database.types.ts
+   ```
+5. Criar o primeiro admin manualmente (não há tela de cadastro, é
+   intencional — time pequeno e de confiança):
+   - Authentication > Users > "Add user" no dashboard do Supabase, com
+     email/senha.
+   - No SQL Editor, rodar:
+     ```sql
+     insert into public.profiles (id, full_name)
+     values ('<uuid do usuario criado acima>', 'Seu nome');
+     ```
+6. Logar em `/admin/login` com esse email/senha.
 
-## Learn More
+## Checklist: Mercado Pago (fica para o final)
 
-To learn more about Next.js, take a look at the following resources:
+Sem essas variáveis, o botão "Gerar Pix" mostra um aviso amigável (não
+quebra o app) e o webhook recusa toda requisição com 401.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Criar/acessar a conta no [painel do desenvolvedor Mercado Pago](https://www.mercadopago.com.br/developers/panel).
+2. Pegar o **Access Token** de produção (ou teste) e colocar em
+   `MP_ACCESS_TOKEN`.
+3. Em Notificações > Webhooks, cadastrar a URL
+   `https://<seu-dominio>/api/webhooks/mercadopago` e copiar a **chave
+   secreta** gerada para `MP_WEBHOOK_SECRET`.
+4. Preencher `NEXT_PUBLIC_SITE_URL` com a URL pública real do site (usada
+   como `notification_url` ao criar cada cobrança Pix).
+5. Testar: gerar uma cobrança de mensalidade/caixinha no admin, clicar em
+   "Gerar Pix", pagar o QR code gerado (ambiente de teste ou real) e
+   confirmar que o status muda para "Pago" automaticamente via webhook.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Enquanto o segredo real não existe, dá pra testar o endpoint localmente com
+o fallback de `?secret=` documentado em `src/lib/mercadopago/webhook.ts` —
+não usar isso em produção depois que a verificação de assinatura estiver
+confirmada funcionando.
 
-## Deploy on Vercel
+## Estrutura
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+src/
+  proxy.ts                 → protege /admin/* (sessão), pagina publica fica de fora
+  app/
+    (public)/page.tsx      → "/" pagina publica de status
+    (admin)/admin/...      → painel (jogadores, cobrancas, configuracoes)
+    api/webhooks/mercadopago/route.ts
+  lib/
+    supabase/               → clients (browser/server/admin) + env
+    data/                   → camada de dados (auth, players, payments, settings, public-status)
+    mercadopago/            → cliente isolado da API do Mercado Pago
+    utils/                  → formatacao de moeda e mes
+supabase/migrations/0001_init.sql → schema completo (tabelas + RLS)
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deploy
+
+Recomendado: [Vercel](https://vercel.com/new). Configurar as mesmas
+variáveis de ambiente de `.env.local` no painel do projeto.

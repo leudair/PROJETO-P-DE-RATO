@@ -17,7 +17,11 @@ export async function getTeamSettings() {
 }
 
 export async function updateTeamSettings(
-  input: z.infer<typeof UpdateSettingsSchema> & { bannerImageUrl?: string; crestImageUrl?: string }
+  input: z.infer<typeof UpdateSettingsSchema> & {
+    bannerImageUrl?: string;
+    crestImageUrl?: string;
+    topBannerUrl?: string;
+  }
 ) {
   await requireAdmin();
   const supabase = await createClient();
@@ -27,11 +31,12 @@ export async function updateTeamSettings(
     .update({
       team_name: input.teamName,
       default_mensalidade_amount: input.defaultMensalidadeAmount,
-      // so sobrescreve banner/escudo quando uma nova imagem foi enviada
-      // nesse submit — salvar as outras configuracoes nao deve apagar o
-      // que ja estava la.
+      // so sobrescreve banner/escudo/topo quando uma nova imagem foi
+      // enviada nesse submit — salvar as outras configuracoes nao deve
+      // apagar o que ja estava la.
       ...(input.bannerImageUrl ? { banner_image_url: input.bannerImageUrl } : {}),
       ...(input.crestImageUrl ? { crest_image_url: input.crestImageUrl } : {}),
+      ...(input.topBannerUrl ? { top_banner_url: input.topBannerUrl } : {}),
       updated_at: new Date().toISOString(),
     })
     .eq("id", 1);

@@ -45,8 +45,21 @@ export async function updateSettingsAction(
     }
   }
 
+  let topBannerUrl: string | undefined;
+  const topBannerFile = formData.get("topBannerImage");
+  if (topBannerFile instanceof File && topBannerFile.size > 0) {
+    try {
+      topBannerUrl = await uploadPublicImage(topBannerFile, "top-banners");
+    } catch (err) {
+      if (err instanceof InvalidImageError) {
+        return { error: err.message };
+      }
+      return { error: "Não foi possível enviar o banner do topo." };
+    }
+  }
+
   try {
-    await updateTeamSettings({ ...parsed.data, bannerImageUrl, crestImageUrl });
+    await updateTeamSettings({ ...parsed.data, bannerImageUrl, crestImageUrl, topBannerUrl });
   } catch {
     return { error: "Não foi possível salvar." };
   }

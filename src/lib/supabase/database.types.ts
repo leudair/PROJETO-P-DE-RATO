@@ -42,6 +42,7 @@ export interface Database {
           default_mensalidade_amount: number;
           banner_image_url: string | null;
           crest_image_url: string | null;
+          top_banner_url: string | null;
           updated_at: string;
         };
         Insert: {
@@ -50,6 +51,7 @@ export interface Database {
           default_mensalidade_amount?: number;
           banner_image_url?: string | null;
           crest_image_url?: string | null;
+          top_banner_url?: string | null;
           updated_at?: string;
         };
         Update: {
@@ -58,6 +60,7 @@ export interface Database {
           default_mensalidade_amount?: number;
           banner_image_url?: string | null;
           crest_image_url?: string | null;
+          top_banner_url?: string | null;
           updated_at?: string;
         };
         Relationships: [];

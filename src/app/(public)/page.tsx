@@ -15,6 +15,7 @@ export default async function PublicStatusPage() {
     teamName,
     bannerImageUrl,
     crestImageUrl,
+    topBannerUrl,
     defaultMensalidadeAmount,
     referenceMonth,
     players,
@@ -26,24 +27,10 @@ export default async function PublicStatusPage() {
 
   return (
     <main className="mx-auto min-h-screen max-w-2xl px-3 py-6 sm:px-4 sm:py-10">
-      {bannerImageUrl &&
-        (isVideoUrl(bannerImageUrl) ? (
-          <video
-            src={bannerImageUrl}
-            className="mb-4 h-36 w-full rounded-xl object-cover sm:mb-6 sm:h-56"
-            autoPlay
-            loop
-            muted
-            playsInline
-          />
-        ) : (
-          // eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao
-          <img
-            src={bannerImageUrl}
-            alt=""
-            className="mb-4 h-36 w-full rounded-xl object-cover sm:mb-6 sm:h-56"
-          />
-        ))}
+      {topBannerUrl && (
+        // eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao
+        <img src={topBannerUrl} alt="" className="mb-4 h-12 w-full rounded-lg object-cover sm:h-14" />
+      )}
 
       <div className="mb-6 flex items-center justify-between gap-3 rounded-xl border border-border bg-surface px-4 py-4 sm:mb-8">
         <div className="flex min-w-0 items-center gap-3">
@@ -61,20 +48,20 @@ export default async function PublicStatusPage() {
         <ThemeToggle />
       </div>
 
-      <div className="mb-6 space-y-3 sm:mb-8">
+      <div className="mb-6 grid grid-cols-2 gap-2 sm:mb-8 sm:gap-3">
         <ExtraFundBanner
           emoji="⚽"
-          title="Jogo avulso (racha de onze aleatório)"
-          description="De vez em quando rola um racha com time sorteado na hora. A arrecadação desse jogo é separada da mensalidade — cada um contribui com o valor que quiser, a partir de R$ 20."
+          title="Jogo avulso"
+          description="Racha com time sorteado na hora. Contribua a partir de R$20."
           minAmount={20}
-          buttonLabel="Contribuir pro jogo avulso"
+          buttonLabel="Contribuir"
           action={payPickupGameAction}
         />
         <ExtraFundBanner
           emoji="🧺"
-          title="Lavagem dos coletes"
-          description="Caixinha separada pra pagar quem lava os coletes do time. Também não entra na mensalidade nem no jogo avulso."
-          buttonLabel="Contribuir pra lavagem"
+          title="Coletes"
+          description="Caixinha pra pagar quem lava os coletes do time."
+          buttonLabel="Contribuir"
           action={payJerseyWashAction}
         />
       </div>
@@ -135,6 +122,25 @@ export default async function PublicStatusPage() {
           <span className="text-success">{formatBRL(totals.balance)}</span>
         </div>
       </div>
+
+      {bannerImageUrl &&
+        (isVideoUrl(bannerImageUrl) ? (
+          <video
+            src={bannerImageUrl}
+            className="mt-6 h-36 w-full rounded-xl object-cover sm:mt-8 sm:h-56"
+            autoPlay
+            loop
+            muted
+            playsInline
+          />
+        ) : (
+          // eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao
+          <img
+            src={bannerImageUrl}
+            alt=""
+            className="mt-6 h-36 w-full rounded-xl object-cover sm:mt-8 sm:h-56"
+          />
+        ))}
 
       <SponsorsFooter sponsors={sponsors} />
     </main>

@@ -12,6 +12,7 @@ export function SettingsForm({
     defaultMensalidadeAmount: number;
     bannerImageUrl: string | null;
     crestImageUrl: string | null;
+    topBannerUrl: string | null;
   };
 }) {
   const [state, formAction, pending] = useActionState(updateSettingsAction, undefined);
@@ -60,7 +61,29 @@ export function SettingsForm({
       </div>
 
       <div className="space-y-1">
-        <label className="text-xs font-medium text-foreground">Banner do topo (imagem ou vídeo)</label>
+        <label className="text-xs font-medium text-foreground">Banner fino do topo (propaganda/patrocínio)</label>
+        {defaultValues.topBannerUrl && (
+          // eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao
+          <img
+            src={defaultValues.topBannerUrl}
+            alt="Banner do topo atual"
+            className="mb-2 h-12 w-full rounded-md object-cover"
+          />
+        )}
+        <input
+          name="topBannerImage"
+          type="file"
+          accept="image/png,image/jpeg,image/webp,image/gif"
+          className="w-full rounded-md border border-border px-3 py-2 text-sm"
+        />
+        <p className="text-xs text-muted">
+          PNG, JPEG, WEBP ou GIF, até 5MB. Faixa fina no topo da página pública — espaço reservado pra
+          divulgar patrocinador no futuro. Deixe em branco pra não mostrar nada.
+        </p>
+      </div>
+
+      <div className="space-y-1">
+        <label className="text-xs font-medium text-foreground">Banner do rodapé (imagem ou vídeo)</label>
         {defaultValues.bannerImageUrl &&
           (isVideoUrl(defaultValues.bannerImageUrl) ? (
             <video
@@ -86,7 +109,8 @@ export function SettingsForm({
           className="w-full rounded-md border border-border px-3 py-2 text-sm"
         />
         <p className="text-xs text-muted">
-          PNG, JPEG, WEBP, GIF (até 5MB) ou MP4/WEBM (até 20MB). Deixe em branco para manter o atual.
+          PNG, JPEG, WEBP, GIF (até 5MB) ou MP4/WEBM (até 20MB). Aparece perto do rodapé da página pública.
+          Deixe em branco para manter o atual.
         </p>
       </div>
 

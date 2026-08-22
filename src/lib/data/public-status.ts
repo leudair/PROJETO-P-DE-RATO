@@ -27,7 +27,7 @@ export async function getPublicStatus() {
   ] = await Promise.all([
     admin
       .from("team_settings")
-      .select("team_name, default_mensalidade_amount, banner_image_url, crest_image_url")
+      .select("team_name, default_mensalidade_amount, banner_image_url, crest_image_url, top_banner_url")
       .eq("id", 1)
       .single(),
     admin
@@ -101,6 +101,7 @@ export async function getPublicStatus() {
     teamName: settings?.team_name ?? "Meu Time",
     bannerImageUrl: settings?.banner_image_url ?? null,
     crestImageUrl: settings?.crest_image_url ?? null,
+    topBannerUrl: settings?.top_banner_url ?? null,
     defaultMensalidadeAmount: settings?.default_mensalidade_amount ?? 0,
     referenceMonth,
     players: playerStatus,

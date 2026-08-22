@@ -24,38 +24,36 @@ export function ExtraFundBanner({
   const [state, formAction, pending] = useActionState(action, undefined);
 
   return (
-    <div className="mb-4 overflow-hidden rounded-xl border border-accent/40 bg-accent/10">
-      <div className="p-4">
+    <div className="h-full overflow-hidden rounded-xl border border-accent/40 bg-accent/10">
+      <div className="flex h-full flex-col p-3">
         <p className="text-sm font-semibold text-foreground">
           {emoji} {title}
         </p>
-        <p className="mt-1 text-sm text-muted">{description}</p>
+        <p className="mt-1 flex-1 text-xs text-muted">{description}</p>
 
-        <form action={formAction} className="mt-3 flex flex-wrap items-center gap-2">
+        <form action={formAction} className="mt-3 space-y-2">
           <input
             name="amount"
             type="number"
             step="0.01"
             min={minAmount ?? 0.01}
-            placeholder={minAmount ? `Valor (mín. ${formatBRL(minAmount)})` : "Valor (R$)"}
+            placeholder={minAmount ? `Mín. ${formatBRL(minAmount)}` : "Valor (R$)"}
             required
-            className="w-40 rounded-md border border-border bg-surface px-3 py-2 text-sm"
+            className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm"
           />
           <button
             type="submit"
             disabled={pending}
-            className="rounded-md bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground disabled:opacity-50"
+            className="w-full rounded-md bg-accent px-3 py-2 text-sm font-semibold text-accent-foreground disabled:opacity-50"
           >
             {pending ? "Gerando Pix..." : buttonLabel}
           </button>
         </form>
 
-        {state?.status === "error" && <p className="mt-2 text-sm text-red-600">{state.message}</p>}
+        {state?.status === "error" && <p className="mt-2 text-xs text-red-600">{state.message}</p>}
         {state?.status === "pix-ready" && (
-          <div className="mt-3 space-y-2 rounded-md bg-surface p-3">
-            <p className="text-xs text-muted">
-              Pix de {formatBRL(state.amount)} — copie o código abaixo no app do seu banco:
-            </p>
+          <div className="mt-3 space-y-2 rounded-md bg-surface p-2">
+            <p className="text-xs text-muted">Pix de {formatBRL(state.amount)} — copie o código abaixo:</p>
             <textarea
               readOnly
               value={state.copyPaste}

@@ -35,22 +35,44 @@ export function PlayerPaymentCard({
 
   return (
     <div className={`overflow-hidden rounded-xl border border-border bg-surface ${open ? "col-span-2" : ""}`}>
-      <button type="button" onClick={() => setOpen((v) => !v)} className="block w-full text-center">
-        <PlayerFigure name={player.name} photoUrl={player.photoUrl} />
-        <div className="space-y-0.5 px-2 pb-3 pt-2">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center gap-3 px-3 py-3 text-left"
+      >
+        <PlayerThumb name={player.name} photoUrl={player.photoUrl} />
+        <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-medium text-foreground">{player.name}</p>
           <p className="text-xs text-muted">
             {player.position ? POSITION_LABEL[player.position] : "—"}
             {player.age ? ` · ${player.age} anos` : ""}
           </p>
-          <div className="flex justify-center pt-1">
+          <div className="pt-1">
             <StatusBadge status={player.status} />
           </div>
         </div>
       </button>
 
       {open && (
-        <div className="space-y-5 border-t border-border p-4 text-left">
+        <div className="space-y-5 border-t border-border p-4">
+          {player.photoUrl && (
+            <div className="mx-auto h-40 w-32 overflow-hidden rounded-lg bg-surface-2">
+              {isVideoUrl(player.photoUrl) ? (
+                <video
+                  src={player.photoUrl}
+                  className="h-full w-full object-contain"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                />
+              ) : (
+                // eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao
+                <img src={player.photoUrl} alt={player.name} className="h-full w-full object-contain" />
+              )}
+            </div>
+          )}
+
           {!isGoalkeeper && (
             <div>
               <p className="mb-2 text-sm text-foreground">Mensalidade do mês</p>
@@ -111,15 +133,15 @@ export function PlayerPaymentCard({
   );
 }
 
-function PlayerFigure({ name, photoUrl }: { name: string; photoUrl: string | null }) {
+function PlayerThumb({ name, photoUrl }: { name: string; photoUrl: string | null }) {
   if (photoUrl) {
     return (
-      <div className="aspect-[3/4] w-full bg-surface-2">
+      <div className="h-12 w-12 shrink-0 overflow-hidden rounded-full bg-surface-2">
         {isVideoUrl(photoUrl) ? (
-          <video src={photoUrl} className="h-full w-full object-contain" autoPlay loop muted playsInline />
+          <video src={photoUrl} className="h-full w-full object-cover" muted playsInline />
         ) : (
           // eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao
-          <img src={photoUrl} alt={name} className="h-full w-full object-contain" />
+          <img src={photoUrl} alt={name} className="h-full w-full object-cover" />
         )}
       </div>
     );
@@ -132,11 +154,9 @@ function PlayerFigure({ name, photoUrl }: { name: string; photoUrl: string | nul
     .join("");
 
   return (
-    <div className="flex aspect-[3/4] w-full items-center justify-center bg-surface-2">
-      <span className="flex h-14 w-14 items-center justify-center rounded-full bg-surface text-lg font-medium text-muted">
-        {initials}
-      </span>
-    </div>
+    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-surface-2 text-sm font-medium text-muted">
+      {initials}
+    </span>
   );
 }
 

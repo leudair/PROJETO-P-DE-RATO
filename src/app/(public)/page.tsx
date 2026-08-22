@@ -4,11 +4,12 @@ import { formatBRL } from "@/lib/utils/currency";
 import { formatReferenceMonth } from "@/lib/utils/month";
 import { PlayerPaymentCard } from "./player-payment-card";
 import { PickupGameBanner } from "./pickup-game-banner";
+import { SponsorsFooter } from "./sponsors-footer";
 
 export const dynamic = "force-dynamic";
 
 export default async function PublicStatusPage() {
-  const { teamName, defaultMensalidadeAmount, referenceMonth, players, caixinhaContributions, totals } =
+  const { teamName, defaultMensalidadeAmount, referenceMonth, players, sponsors, caixinhaContributions, totals } =
     await getPublicStatus();
 
   return (
@@ -64,6 +65,8 @@ export default async function PublicStatusPage() {
           <span className="text-success">{formatBRL(totals.total)}</span>
         </div>
       </div>
+
+      <SponsorsFooter sponsors={sponsors} />
     </main>
   );
 }

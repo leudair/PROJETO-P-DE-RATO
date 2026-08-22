@@ -10,18 +10,28 @@ export async function getPublicStatus() {
   const admin = createAdminClient();
   const referenceMonth = currentReferenceMonth();
 
-  const [{ data: settings }, { data: players, error: playersError }, { data: payments, error: paymentsError }] =
-    await Promise.all([
-      admin.from("team_settings").select("team_name, default_mensalidade_amount").eq("id", 1).single(),
-      admin.from("players").select("id, name, position").eq("active", true).order("name", { ascending: true }),
-      admin
-        .from("payments")
-        .select("player_id, type, amount, status")
-        .eq("reference_month", referenceMonth),
-    ]);
+  const [
+    { data: settings },
+    { data: players, error: playersError },
+    { data: payments, error: paymentsError },
+    { data: sponsors, error: sponsorsError },
+  ] = await Promise.all([
+    admin.from("team_settings").select("team_name, default_mensalidade_amount").eq("id", 1).single(),
+    admin.from("players").select("id, name, position").eq("active", true).order("name", { ascending: true }),
+    admin
+      .from("payments")
+      .select("player_id, type, amount, status")
+      .eq("reference_month", referenceMonth),
+    admin
+      .from("sponsors")
+      .select("id, name, website_url")
+      .eq("active", true)
+      .order("display_order", { ascending: true }),
+  ]);
 
   if (playersError) throw playersError;
   if (paymentsError) throw paymentsError;
+  if (sponsorsError) throw sponsorsError;
 
   const mensalidadeByPlayer = new Map(
     payments.filter((p) => p.type === "mensalidade").map((p) => [p.player_id, p])
@@ -60,6 +70,7 @@ export async function getPublicStatus() {
     defaultMensalidadeAmount: settings?.default_mensalidade_amount ?? 0,
     referenceMonth,
     players: playerStatus,
+    sponsors,
     caixinhaContributions,
     totals: {
       mensalidade: totalMensalidade,

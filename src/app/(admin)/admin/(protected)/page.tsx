@@ -11,7 +11,7 @@ export default async function AdminDashboardPage() {
         <p className="text-sm text-muted">Gerencie jogadores, cobranças e configurações do time.</p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Link
           href="/admin/players"
           className="rounded-xl border border-border bg-surface p-6 hover:bg-surface-2"
@@ -25,6 +25,13 @@ export default async function AdminDashboardPage() {
         >
           <h2 className="font-medium text-foreground">Cobranças</h2>
           <p className="mt-1 text-sm text-muted">Gerar mensalidades, caixinhas e Pix.</p>
+        </Link>
+        <Link
+          href="/admin/sponsors"
+          className="rounded-xl border border-border bg-surface p-6 hover:bg-surface-2"
+        >
+          <h2 className="font-medium text-foreground">Patrocinadores</h2>
+          <p className="mt-1 text-sm text-muted">Banner de patrocínio no rodapé da página pública.</p>
         </Link>
         <Link
           href="/admin/settings"

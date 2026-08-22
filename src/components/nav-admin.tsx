@@ -19,6 +19,9 @@ export function NavAdmin({ profile }: { profile: Profile }) {
           <Link href="/admin/charges" className="text-muted hover:text-foreground">
             Cobranças
           </Link>
+          <Link href="/admin/sponsors" className="text-muted hover:text-foreground">
+            Patrocinadores
+          </Link>
           <Link href="/admin/settings" className="text-muted hover:text-foreground">
             Configurações
           </Link>

@@ -164,6 +164,33 @@ export interface Database {
         };
         Relationships: [];
       };
+      sponsors: {
+        Row: {
+          id: string;
+          name: string;
+          website_url: string | null;
+          active: boolean;
+          display_order: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          website_url?: string | null;
+          active?: boolean;
+          display_order?: number;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          website_url?: string | null;
+          active?: boolean;
+          display_order?: number;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;

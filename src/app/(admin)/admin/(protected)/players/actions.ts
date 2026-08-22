@@ -8,14 +8,14 @@ import {
   setPlayerActive,
   updatePlayer,
 } from "@/lib/data/players";
-import { InvalidImageError, uploadPublicImage } from "@/lib/supabase/storage";
+import { InvalidImageError, uploadPublicMedia } from "@/lib/supabase/storage";
 
 export type PlayerFormState = { error?: string; success?: string } | undefined;
 
 async function uploadPhotoIfPresent(formData: FormData): Promise<string | undefined> {
   const photoFile = formData.get("photo");
   if (photoFile instanceof File && photoFile.size > 0) {
-    return uploadPublicImage(photoFile, "players");
+    return uploadPublicMedia(photoFile, "players");
   }
   return undefined;
 }

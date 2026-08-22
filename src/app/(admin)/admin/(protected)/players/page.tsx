@@ -2,6 +2,7 @@ import Link from "next/link";
 import { listPlayers } from "@/lib/data/players";
 import { ToggleActiveButton } from "./toggle-active-button";
 import { POSITION_LABEL } from "@/lib/utils/positions";
+import { isVideoUrl } from "@/lib/utils/media";
 
 export default async function PlayersPage() {
   const players = await listPlayers();
@@ -39,8 +40,18 @@ export default async function PlayersPage() {
               <tr key={player.id} className="border-b border-border last:border-0">
                 <td className="px-4 py-3">
                   {player.photo_url ? (
-                    // eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao
-                    <img src={player.photo_url} alt={player.name} className="h-8 w-8 rounded-full object-cover" />
+                    isVideoUrl(player.photo_url) ? (
+                      <span className="text-lg" title="Vídeo">
+                        🎬
+                      </span>
+                    ) : (
+                      // eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao
+                      <img
+                        src={player.photo_url}
+                        alt={player.name}
+                        className="h-8 w-8 rounded-full object-cover"
+                      />
+                    )
                   ) : (
                     <span className="text-muted">—</span>
                   )}

@@ -5,6 +5,7 @@ import { payCaixinhaAction, payMensalidadeAction, type PayState } from "./action
 import { StatusBadge } from "@/components/status-badge";
 import { formatBRL } from "@/lib/utils/currency";
 import { POSITION_LABEL } from "@/lib/utils/positions";
+import { isVideoUrl } from "@/lib/utils/media";
 import type { PlayerPosition } from "@/lib/supabase/database.types";
 
 export function PlayerPaymentCard({
@@ -114,8 +115,12 @@ function PlayerFigure({ name, photoUrl }: { name: string; photoUrl: string | nul
   if (photoUrl) {
     return (
       <div className="aspect-[3/4] w-full bg-surface-2">
-        {/* eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao */}
-        <img src={photoUrl} alt={name} className="h-full w-full object-contain" />
+        {isVideoUrl(photoUrl) ? (
+          <video src={photoUrl} className="h-full w-full object-contain" autoPlay loop muted playsInline />
+        ) : (
+          // eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao
+          <img src={photoUrl} alt={name} className="h-full w-full object-contain" />
+        )}
       </div>
     );
   }

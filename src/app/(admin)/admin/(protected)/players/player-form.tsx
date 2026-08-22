@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { createPlayerAction, updatePlayerAction, type PlayerFormState } from "./actions";
 import { POSITIONS, POSITION_LABEL } from "@/lib/utils/positions";
+import { isVideoUrl } from "@/lib/utils/media";
 import type { PlayerPosition } from "@/lib/supabase/database.types";
 
 export function PlayerForm({
@@ -78,24 +79,34 @@ export function PlayerForm({
       </div>
 
       <div className="space-y-1">
-        <label className="text-xs font-medium text-foreground">Foto (opcional)</label>
-        {defaultValues?.photoUrl && (
-          // eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao
-          <img
-            src={defaultValues.photoUrl}
-            alt={defaultValues.name}
-            className="mb-2 h-32 w-24 rounded-md border border-border bg-surface-2 object-contain"
-          />
-        )}
+        <label className="text-xs font-medium text-foreground">Foto ou vídeo (opcional)</label>
+        {defaultValues?.photoUrl &&
+          (isVideoUrl(defaultValues.photoUrl) ? (
+            <video
+              src={defaultValues.photoUrl}
+              className="mb-2 h-32 w-24 rounded-md border border-border bg-surface-2 object-contain"
+              autoPlay
+              loop
+              muted
+              playsInline
+            />
+          ) : (
+            // eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao
+            <img
+              src={defaultValues.photoUrl}
+              alt={defaultValues.name}
+              className="mb-2 h-32 w-24 rounded-md border border-border bg-surface-2 object-contain"
+            />
+          ))}
         <input
           name="photo"
           type="file"
-          accept="image/png,image/jpeg,image/webp,image/gif"
+          accept="image/png,image/jpeg,image/webp,image/gif,video/mp4,video/webm"
           className="w-full rounded-md border border-border px-3 py-2 text-sm"
         />
         <p className="text-xs text-muted">
-          PNG (de preferência de corpo inteiro, fundo transparente), até 5MB. Aparece dentro do card do
-          jogador na página pública.
+          PNG (de preferência de corpo inteiro, fundo transparente, até 5MB) ou vídeo curto MP4/WEBM (até
+          20MB). Aparece dentro do card do jogador na página pública.
         </p>
       </div>
 

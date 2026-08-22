@@ -26,6 +26,10 @@ export default async function AdminDashboardPage() {
           <h2 className="font-medium text-foreground">Cobranças</h2>
           <p className="mt-1 text-sm text-muted">Gerar mensalidades, caixinhas e Pix.</p>
         </Link>
+        <Link href="/admin/cash" className="rounded-xl border border-border bg-surface p-6 hover:bg-surface-2">
+          <h2 className="font-medium text-foreground">Caixa</h2>
+          <p className="mt-1 text-sm text-muted">Retiradas do caixa geral (churrasco, material, etc).</p>
+        </Link>
         <Link
           href="/admin/sponsors"
           className="rounded-xl border border-border bg-surface p-6 hover:bg-surface-2"

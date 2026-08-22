@@ -1,28 +1,43 @@
 "use client";
 
 import { useActionState } from "react";
-import { payPickupGameAction } from "./actions";
+import type { PayState } from "./actions";
 import { formatBRL } from "@/lib/utils/currency";
 
-export function PickupGameBanner() {
-  const [state, formAction, pending] = useActionState(payPickupGameAction, undefined);
+type Action = (prevState: PayState, formData: FormData) => Promise<PayState>;
+
+export function ExtraFundBanner({
+  emoji,
+  title,
+  description,
+  minAmount,
+  buttonLabel,
+  action,
+}: {
+  emoji: string;
+  title: string;
+  description: string;
+  minAmount?: number;
+  buttonLabel: string;
+  action: Action;
+}) {
+  const [state, formAction, pending] = useActionState(action, undefined);
 
   return (
-    <div className="mb-8 overflow-hidden rounded-xl border border-accent/40 bg-accent/10">
+    <div className="mb-4 overflow-hidden rounded-xl border border-accent/40 bg-accent/10">
       <div className="p-4">
-        <p className="text-sm font-semibold text-foreground">⚽ Jogo avulso (racha de onze aleatório)</p>
-        <p className="mt-1 text-sm text-muted">
-          De vez em quando rola um racha com time sorteado na hora. A arrecadação desse jogo é separada da
-          mensalidade — cada um contribui com o valor que quiser, a partir de R$ 20.
+        <p className="text-sm font-semibold text-foreground">
+          {emoji} {title}
         </p>
+        <p className="mt-1 text-sm text-muted">{description}</p>
 
         <form action={formAction} className="mt-3 flex flex-wrap items-center gap-2">
           <input
             name="amount"
             type="number"
             step="0.01"
-            min="20"
-            placeholder="Valor (mín. R$ 20)"
+            min={minAmount ?? 0.01}
+            placeholder={minAmount ? `Valor (mín. ${formatBRL(minAmount)})` : "Valor (R$)"}
             required
             className="w-40 rounded-md border border-border bg-surface px-3 py-2 text-sm"
           />
@@ -31,7 +46,7 @@ export function PickupGameBanner() {
             disabled={pending}
             className="rounded-md bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground disabled:opacity-50"
           >
-            {pending ? "Gerando Pix..." : "Contribuir pro jogo avulso"}
+            {pending ? "Gerando Pix..." : buttonLabel}
           </button>
         </form>
 

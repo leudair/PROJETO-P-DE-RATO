@@ -11,6 +11,11 @@ import {
   attachPixToPickupGameContribution,
   createPickupGameContribution,
 } from "@/lib/data/pickup-game";
+import {
+  JerseyWashContributionSchema,
+  attachPixToJerseyWashContribution,
+  createJerseyWashContribution,
+} from "@/lib/data/jersey-wash";
 import { createPixPayment, isMercadoPagoConfigured, MercadoPagoNotConfiguredError } from "@/lib/mercadopago/client";
 
 export type PayState =
@@ -111,6 +116,21 @@ export async function payPickupGameAction(_prevState: PayState, formData: FormDa
   try {
     const contribution = await createPickupGameContribution(parsed.data.amount);
     return await generateOrReusePix(contribution, "Jogo avulso", attachPixToPickupGameContribution);
+  } catch {
+    return { status: "error", message: "Não foi possível iniciar o pagamento." };
+  }
+}
+
+export async function payJerseyWashAction(_prevState: PayState, formData: FormData): Promise<PayState> {
+  const parsed = JerseyWashContributionSchema.safeParse({ amount: formData.get("amount") });
+
+  if (!parsed.success) {
+    return { status: "error", message: parsed.error.issues[0]?.message ?? "Valor inválido." };
+  }
+
+  try {
+    const contribution = await createJerseyWashContribution(parsed.data.amount);
+    return await generateOrReusePix(contribution, "Lavagem dos coletes", attachPixToJerseyWashContribution);
   } catch {
     return { status: "error", message: "Não foi possível iniciar o pagamento." };
   }

@@ -8,8 +8,8 @@ type Profile = Database["caixa_time"]["Tables"]["profiles"]["Row"];
 export function NavAdmin({ profile }: { profile: Profile }) {
   return (
     <header className="border-b border-border bg-surface">
-      <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-        <nav className="flex items-center gap-4 text-sm">
+      <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-3">
+        <nav className="flex flex-wrap items-center gap-4 text-sm">
           <Link href="/admin" className="font-semibold text-foreground">
             Caixa do Time
           </Link>
@@ -18,6 +18,9 @@ export function NavAdmin({ profile }: { profile: Profile }) {
           </Link>
           <Link href="/admin/charges" className="text-muted hover:text-foreground">
             Cobranças
+          </Link>
+          <Link href="/admin/cash" className="text-muted hover:text-foreground">
+            Caixa
           </Link>
           <Link href="/admin/sponsors" className="text-muted hover:text-foreground">
             Patrocinadores

@@ -25,6 +25,7 @@ export default async function PlayersPage() {
         <table className="w-full text-sm">
           <thead className="border-b border-border bg-surface-2 text-left text-xs text-muted">
             <tr>
+              <th className="px-4 py-2 font-medium">Foto</th>
               <th className="px-4 py-2 font-medium">Nome</th>
               <th className="px-4 py-2 font-medium">Posição</th>
               <th className="px-4 py-2 font-medium">Telefone</th>
@@ -35,6 +36,14 @@ export default async function PlayersPage() {
           <tbody>
             {players.map((player) => (
               <tr key={player.id} className="border-b border-border last:border-0">
+                <td className="px-4 py-3">
+                  {player.photo_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao
+                    <img src={player.photo_url} alt={player.name} className="h-8 w-8 rounded-full object-cover" />
+                  ) : (
+                    <span className="text-muted">—</span>
+                  )}
+                </td>
                 <td className="px-4 py-3">
                   <Link href={`/admin/players/${player.id}`} className="text-foreground hover:underline">
                     {player.name}
@@ -56,7 +65,7 @@ export default async function PlayersPage() {
             ))}
             {players.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-6 text-center text-muted">
+                <td colSpan={6} className="px-4 py-6 text-center text-muted">
                   Nenhum jogador cadastrado ainda.
                 </td>
               </tr>

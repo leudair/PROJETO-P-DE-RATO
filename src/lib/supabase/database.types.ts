@@ -41,6 +41,7 @@ export interface Database {
           team_name: string;
           default_mensalidade_amount: number;
           banner_image_url: string | null;
+          crest_image_url: string | null;
           updated_at: string;
         };
         Insert: {
@@ -48,6 +49,7 @@ export interface Database {
           team_name?: string;
           default_mensalidade_amount?: number;
           banner_image_url?: string | null;
+          crest_image_url?: string | null;
           updated_at?: string;
         };
         Update: {
@@ -55,6 +57,7 @@ export interface Database {
           team_name?: string;
           default_mensalidade_amount?: number;
           banner_image_url?: string | null;
+          crest_image_url?: string | null;
           updated_at?: string;
         };
         Relationships: [];
@@ -65,6 +68,7 @@ export interface Database {
           name: string;
           phone: string | null;
           position: PlayerPosition | null;
+          photo_url: string | null;
           active: boolean;
           created_at: string;
         };
@@ -73,6 +77,7 @@ export interface Database {
           name: string;
           phone?: string | null;
           position?: PlayerPosition | null;
+          photo_url?: string | null;
           active?: boolean;
           created_at?: string;
         };
@@ -81,6 +86,7 @@ export interface Database {
           name?: string;
           phone?: string | null;
           position?: PlayerPosition | null;
+          photo_url?: string | null;
           active?: boolean;
           created_at?: string;
         };
@@ -165,6 +171,60 @@ export interface Database {
           pix_qr_code?: string | null;
           pix_copy_paste?: string | null;
           paid_at?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      jersey_wash_contributions: {
+        Row: {
+          id: string;
+          amount: number;
+          status: PaymentStatus;
+          mercado_pago_payment_id: string | null;
+          pix_qr_code: string | null;
+          pix_copy_paste: string | null;
+          paid_at: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          amount: number;
+          status?: PaymentStatus;
+          mercado_pago_payment_id?: string | null;
+          pix_qr_code?: string | null;
+          pix_copy_paste?: string | null;
+          paid_at?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          amount?: number;
+          status?: PaymentStatus;
+          mercado_pago_payment_id?: string | null;
+          pix_qr_code?: string | null;
+          pix_copy_paste?: string | null;
+          paid_at?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      withdrawals: {
+        Row: {
+          id: string;
+          description: string;
+          amount: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          description: string;
+          amount: number;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          description?: string;
+          amount?: number;
           created_at?: string;
         };
         Relationships: [];

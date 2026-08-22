@@ -10,7 +10,13 @@ export default async function EditPlayerPage({ params }: { params: Promise<{ id:
       <h1 className="text-2xl font-semibold text-foreground">Editar jogador</h1>
       <PlayerForm
         mode="edit"
-        defaultValues={{ playerId: player.id, name: player.name, phone: player.phone, position: player.position }}
+        defaultValues={{
+          playerId: player.id,
+          name: player.name,
+          phone: player.phone,
+          position: player.position,
+          photoUrl: player.photo_url,
+        }}
       />
     </div>
   );

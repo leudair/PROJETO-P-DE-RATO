@@ -2,11 +2,17 @@
 
 import { useActionState } from "react";
 import { updateSettingsAction } from "./actions";
+import { isVideoUrl } from "@/lib/utils/media";
 
 export function SettingsForm({
   defaultValues,
 }: {
-  defaultValues: { teamName: string; defaultMensalidadeAmount: number; bannerImageUrl: string | null };
+  defaultValues: {
+    teamName: string;
+    defaultMensalidadeAmount: number;
+    bannerImageUrl: string | null;
+    crestImageUrl: string | null;
+  };
 }) {
   const [state, formAction, pending] = useActionState(updateSettingsAction, undefined);
 
@@ -37,22 +43,51 @@ export function SettingsForm({
       </div>
 
       <div className="space-y-1">
-        <label className="text-xs font-medium text-foreground">Banner do topo (imagem)</label>
-        {defaultValues.bannerImageUrl && (
+        <label className="text-xs font-medium text-foreground">Escudo do time</label>
+        {defaultValues.crestImageUrl && (
           // eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao
-          <img
-            src={defaultValues.bannerImageUrl}
-            alt="Banner atual"
-            className="mb-2 h-24 w-full rounded-md object-cover"
-          />
+          <img src={defaultValues.crestImageUrl} alt="Escudo atual" className="mb-2 h-16 w-16 object-contain" />
         )}
         <input
-          name="bannerImage"
+          name="crestImage"
           type="file"
           accept="image/png,image/jpeg,image/webp,image/gif"
           className="w-full rounded-md border border-border px-3 py-2 text-sm"
         />
-        <p className="text-xs text-muted">PNG, JPEG, WEBP ou GIF, até 5MB. Deixe em branco para manter o atual.</p>
+        <p className="text-xs text-muted">
+          PNG, JPEG, WEBP ou GIF, até 5MB. Aparece ao lado do nome do time no topo da página pública.
+        </p>
+      </div>
+
+      <div className="space-y-1">
+        <label className="text-xs font-medium text-foreground">Banner do topo (imagem ou vídeo)</label>
+        {defaultValues.bannerImageUrl &&
+          (isVideoUrl(defaultValues.bannerImageUrl) ? (
+            <video
+              src={defaultValues.bannerImageUrl}
+              className="mb-2 h-24 w-full rounded-md object-cover"
+              autoPlay
+              loop
+              muted
+              playsInline
+            />
+          ) : (
+            // eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao
+            <img
+              src={defaultValues.bannerImageUrl}
+              alt="Banner atual"
+              className="mb-2 h-24 w-full rounded-md object-cover"
+            />
+          ))}
+        <input
+          name="bannerImage"
+          type="file"
+          accept="image/png,image/jpeg,image/webp,image/gif,video/mp4,video/webm"
+          className="w-full rounded-md border border-border px-3 py-2 text-sm"
+        />
+        <p className="text-xs text-muted">
+          PNG, JPEG, WEBP, GIF (até 5MB) ou MP4/WEBM (até 20MB). Deixe em branco para manter o atual.
+        </p>
       </div>
 
       {state?.error && <p className="text-sm text-red-600">{state.error}</p>}

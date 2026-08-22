@@ -11,7 +11,13 @@ export function PlayerPaymentCard({
   player,
   defaultMensalidadeAmount,
 }: {
-  player: { id: string; name: string; position: PlayerPosition | null; status: "paid" | "pending" | "exempt" };
+  player: {
+    id: string;
+    name: string;
+    position: PlayerPosition | null;
+    photoUrl: string | null;
+    status: "paid" | "pending" | "exempt";
+  };
   defaultMensalidadeAmount: number;
 }) {
   const [open, setOpen] = useState(false);
@@ -30,13 +36,16 @@ export function PlayerPaymentCard({
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center justify-between px-4 py-3 text-left"
+        className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left"
       >
-        <div>
-          <span className="font-medium text-foreground">{player.name}</span>
-          {player.position && <p className="text-xs text-muted">{POSITION_LABEL[player.position]}</p>}
+        <div className="flex min-w-0 items-center gap-3">
+          <PlayerAvatar name={player.name} photoUrl={player.photoUrl} />
+          <div className="min-w-0">
+            <span className="block truncate font-medium text-foreground">{player.name}</span>
+            {player.position && <p className="text-xs text-muted">{POSITION_LABEL[player.position]}</p>}
+          </div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex shrink-0 items-center gap-3">
           <StatusBadge status={player.status} />
           <span className="text-xs text-muted">{open ? "Fechar" : "Pagar"}</span>
         </div>
@@ -93,6 +102,25 @@ export function PlayerPaymentCard({
         </div>
       )}
     </div>
+  );
+}
+
+function PlayerAvatar({ name, photoUrl }: { name: string; photoUrl: string | null }) {
+  if (photoUrl) {
+    // eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao
+    return <img src={photoUrl} alt={name} className="h-10 w-10 shrink-0 rounded-full object-cover" />;
+  }
+
+  const initials = name
+    .split(" ")
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join("");
+
+  return (
+    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface-2 text-sm font-medium text-muted">
+      {initials}
+    </span>
   );
 }
 

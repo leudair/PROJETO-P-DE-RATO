@@ -41,24 +41,32 @@ export async function getPlayer(id: string) {
   return data;
 }
 
-export async function createPlayer(input: z.infer<typeof CreatePlayerSchema>) {
+export async function createPlayer(input: z.infer<typeof CreatePlayerSchema> & { photoUrl?: string }) {
   await requireAdmin();
   const supabase = await createClient();
 
   const { error } = await supabase
     .from("players")
-    .insert({ name: input.name, phone: input.phone, position: input.position });
+    .insert({ name: input.name, phone: input.phone, position: input.position, photo_url: input.photoUrl });
 
   if (error) throw error;
 }
 
-export async function updatePlayer(input: z.infer<typeof UpdatePlayerSchema>) {
+export async function updatePlayer(
+  input: z.infer<typeof UpdatePlayerSchema> & { photoUrl?: string }
+) {
   await requireAdmin();
   const supabase = await createClient();
 
   const { error } = await supabase
     .from("players")
-    .update({ name: input.name, phone: input.phone, position: input.position })
+    .update({
+      name: input.name,
+      phone: input.phone,
+      position: input.position,
+      // so sobrescreve a foto quando uma nova foi enviada nesse submit
+      ...(input.photoUrl ? { photo_url: input.photoUrl } : {}),
+    })
     .eq("id", input.playerId);
 
   if (error) throw error;

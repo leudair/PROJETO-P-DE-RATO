@@ -10,7 +10,13 @@ export function PlayerForm({
   defaultValues,
 }: {
   mode: "create" | "edit";
-  defaultValues?: { playerId: string; name: string; phone: string | null; position: PlayerPosition | null };
+  defaultValues?: {
+    playerId: string;
+    name: string;
+    phone: string | null;
+    position: PlayerPosition | null;
+    photoUrl: string | null;
+  };
 }) {
   const action = mode === "create" ? createPlayerAction : updatePlayerAction;
   const [state, formAction, pending] = useActionState<PlayerFormState, FormData>(action, undefined);
@@ -55,6 +61,25 @@ export function PlayerForm({
           ))}
         </select>
         <p className="text-xs text-muted">Goleiro fica isento da mensalidade automaticamente.</p>
+      </div>
+
+      <div className="space-y-1">
+        <label className="text-xs font-medium text-foreground">Foto (opcional)</label>
+        {defaultValues?.photoUrl && (
+          // eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao
+          <img
+            src={defaultValues.photoUrl}
+            alt={defaultValues.name}
+            className="mb-2 h-16 w-16 rounded-full object-cover"
+          />
+        )}
+        <input
+          name="photo"
+          type="file"
+          accept="image/png,image/jpeg,image/webp,image/gif"
+          className="w-full rounded-md border border-border px-3 py-2 text-sm"
+        />
+        <p className="text-xs text-muted">PNG, JPEG, WEBP ou GIF, até 5MB. Aparece ao lado do nome na página pública.</p>
       </div>
 
       {state?.error && <p className="text-sm text-red-600">{state.error}</p>}

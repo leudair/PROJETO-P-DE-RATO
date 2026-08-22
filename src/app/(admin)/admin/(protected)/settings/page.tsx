@@ -12,6 +12,7 @@ export default async function SettingsPage() {
           teamName: settings.team_name,
           defaultMensalidadeAmount: settings.default_mensalidade_amount,
           bannerImageUrl: settings.banner_image_url,
+          crestImageUrl: settings.crest_image_url,
         }}
       />
     </div>

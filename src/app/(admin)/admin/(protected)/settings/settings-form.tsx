@@ -6,7 +6,7 @@ import { updateSettingsAction } from "./actions";
 export function SettingsForm({
   defaultValues,
 }: {
-  defaultValues: { teamName: string; defaultMensalidadeAmount: number };
+  defaultValues: { teamName: string; defaultMensalidadeAmount: number; bannerImageUrl: string | null };
 }) {
   const [state, formAction, pending] = useActionState(updateSettingsAction, undefined);
 
@@ -34,6 +34,25 @@ export function SettingsForm({
           className="w-full rounded-md border border-border px-3 py-2 text-sm"
         />
         <p className="text-xs text-muted">Usado ao gerar as cobranças do mês para todos os jogadores ativos.</p>
+      </div>
+
+      <div className="space-y-1">
+        <label className="text-xs font-medium text-foreground">Banner do topo (imagem)</label>
+        {defaultValues.bannerImageUrl && (
+          // eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao
+          <img
+            src={defaultValues.bannerImageUrl}
+            alt="Banner atual"
+            className="mb-2 h-24 w-full rounded-md object-cover"
+          />
+        )}
+        <input
+          name="bannerImage"
+          type="file"
+          accept="image/png,image/jpeg,image/webp,image/gif"
+          className="w-full rounded-md border border-border px-3 py-2 text-sm"
+        />
+        <p className="text-xs text-muted">PNG, JPEG, WEBP ou GIF, até 5MB. Deixe em branco para manter o atual.</p>
       </div>
 
       {state?.error && <p className="text-sm text-red-600">{state.error}</p>}

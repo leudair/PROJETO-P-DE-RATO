@@ -16,7 +16,11 @@ export async function getPublicStatus() {
     { data: payments, error: paymentsError },
     { data: sponsors, error: sponsorsError },
   ] = await Promise.all([
-    admin.from("team_settings").select("team_name, default_mensalidade_amount").eq("id", 1).single(),
+    admin
+      .from("team_settings")
+      .select("team_name, default_mensalidade_amount, banner_image_url")
+      .eq("id", 1)
+      .single(),
     admin.from("players").select("id, name, position").eq("active", true).order("name", { ascending: true }),
     admin
       .from("payments")
@@ -24,7 +28,7 @@ export async function getPublicStatus() {
       .eq("reference_month", referenceMonth),
     admin
       .from("sponsors")
-      .select("id, name, website_url")
+      .select("id, name, website_url, logo_url")
       .eq("active", true)
       .order("display_order", { ascending: true }),
   ]);
@@ -67,6 +71,7 @@ export async function getPublicStatus() {
 
   return {
     teamName: settings?.team_name ?? "Meu Time",
+    bannerImageUrl: settings?.banner_image_url ?? null,
     defaultMensalidadeAmount: settings?.default_mensalidade_amount ?? 0,
     referenceMonth,
     players: playerStatus,

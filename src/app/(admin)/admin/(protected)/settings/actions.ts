@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { UpdateSettingsSchema, updateTeamSettings } from "@/lib/data/settings";
+import { InvalidImageError, uploadPublicImage } from "@/lib/supabase/storage";
 
 export type SettingsFormState = { error?: string; success?: string } | undefined;
 
@@ -18,8 +19,21 @@ export async function updateSettingsAction(
     return { error: parsed.error.issues[0]?.message ?? "Dados inválidos." };
   }
 
+  let bannerImageUrl: string | undefined;
+  const bannerFile = formData.get("bannerImage");
+  if (bannerFile instanceof File && bannerFile.size > 0) {
+    try {
+      bannerImageUrl = await uploadPublicImage(bannerFile, "banners");
+    } catch (err) {
+      if (err instanceof InvalidImageError) {
+        return { error: err.message };
+      }
+      return { error: "Não foi possível enviar a imagem do banner." };
+    }
+  }
+
   try {
-    await updateTeamSettings(parsed.data);
+    await updateTeamSettings({ ...parsed.data, bannerImageUrl });
   } catch {
     return { error: "Não foi possível salvar." };
   }

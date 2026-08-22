@@ -16,7 +16,9 @@ export async function getTeamSettings() {
   return data;
 }
 
-export async function updateTeamSettings(input: z.infer<typeof UpdateSettingsSchema>) {
+export async function updateTeamSettings(
+  input: z.infer<typeof UpdateSettingsSchema> & { bannerImageUrl?: string }
+) {
   await requireAdmin();
   const supabase = await createClient();
 
@@ -25,6 +27,9 @@ export async function updateTeamSettings(input: z.infer<typeof UpdateSettingsSch
     .update({
       team_name: input.teamName,
       default_mensalidade_amount: input.defaultMensalidadeAmount,
+      // so sobrescreve o banner quando uma nova imagem foi enviada nesse
+      // submit — salvar as outras configuracoes nao deve apagar o banner atual.
+      ...(input.bannerImageUrl ? { banner_image_url: input.bannerImageUrl } : {}),
       updated_at: new Date().toISOString(),
     })
     .eq("id", 1);

@@ -18,6 +18,7 @@ export default async function SponsorsPage() {
         <table className="w-full text-sm">
           <thead className="border-b border-border bg-surface-2 text-left text-xs text-muted">
             <tr>
+              <th className="px-4 py-2 font-medium">Logo</th>
               <th className="px-4 py-2 font-medium">Nome</th>
               <th className="px-4 py-2 font-medium">Link</th>
               <th className="px-4 py-2 font-medium">Status</th>
@@ -27,6 +28,14 @@ export default async function SponsorsPage() {
           <tbody>
             {sponsors.map((sponsor) => (
               <tr key={sponsor.id} className="border-b border-border last:border-0">
+                <td className="px-4 py-3">
+                  {sponsor.logo_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao
+                    <img src={sponsor.logo_url} alt={sponsor.name} className="h-8 w-8 rounded object-contain" />
+                  ) : (
+                    <span className="text-muted">—</span>
+                  )}
+                </td>
                 <td className="px-4 py-3 text-foreground">{sponsor.name}</td>
                 <td className="px-4 py-3 text-muted">
                   {sponsor.website_url ? (
@@ -49,7 +58,7 @@ export default async function SponsorsPage() {
             ))}
             {sponsors.length === 0 && (
               <tr>
-                <td colSpan={4} className="px-4 py-6 text-center text-muted">
+                <td colSpan={5} className="px-4 py-6 text-center text-muted">
                   Nenhum patrocinador cadastrado ainda.
                 </td>
               </tr>

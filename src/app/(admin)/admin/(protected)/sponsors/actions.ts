@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { CreateSponsorSchema, createSponsor, setSponsorActive } from "@/lib/data/sponsors";
+import { InvalidImageError, uploadPublicImage } from "@/lib/supabase/storage";
 
 export type SponsorFormState = { error?: string; success?: string } | undefined;
 
@@ -18,8 +19,21 @@ export async function createSponsorAction(
     return { error: parsed.error.issues[0]?.message ?? "Dados inválidos." };
   }
 
+  let logoUrl: string | undefined;
+  const logoFile = formData.get("logo");
+  if (logoFile instanceof File && logoFile.size > 0) {
+    try {
+      logoUrl = await uploadPublicImage(logoFile, "sponsors");
+    } catch (err) {
+      if (err instanceof InvalidImageError) {
+        return { error: err.message };
+      }
+      return { error: "Não foi possível enviar a logo." };
+    }
+  }
+
   try {
-    await createSponsor(parsed.data);
+    await createSponsor({ ...parsed.data, logoUrl });
   } catch {
     return { error: "Não foi possível adicionar o patrocinador." };
   }

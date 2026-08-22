@@ -38,18 +38,21 @@ export interface Database {
           id: number;
           team_name: string;
           default_mensalidade_amount: number;
+          banner_image_url: string | null;
           updated_at: string;
         };
         Insert: {
           id?: number;
           team_name?: string;
           default_mensalidade_amount?: number;
+          banner_image_url?: string | null;
           updated_at?: string;
         };
         Update: {
           id?: number;
           team_name?: string;
           default_mensalidade_amount?: number;
+          banner_image_url?: string | null;
           updated_at?: string;
         };
         Relationships: [];
@@ -169,6 +172,7 @@ export interface Database {
           id: string;
           name: string;
           website_url: string | null;
+          logo_url: string | null;
           active: boolean;
           display_order: number;
           created_at: string;
@@ -177,6 +181,7 @@ export interface Database {
           id?: string;
           name: string;
           website_url?: string | null;
+          logo_url?: string | null;
           active?: boolean;
           display_order?: number;
           created_at?: string;
@@ -185,6 +190,7 @@ export interface Database {
           id?: string;
           name?: string;
           website_url?: string | null;
+          logo_url?: string | null;
           active?: boolean;
           display_order?: number;
           created_at?: string;

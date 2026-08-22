@@ -46,6 +46,11 @@ esperado até o checklist do Supabase ser concluído.
      values ('<uuid do usuario criado acima>', 'Seu nome');
      ```
 6. Logar em `/admin/login` com esse email/senha.
+7. Para o banner de imagem (topo da página pública) e logo de patrocinador
+   funcionarem, criar um bucket público no Storage: **Storage → New bucket**,
+   nome `public`, marcar **Public bucket**. O upload em si é feito pelo
+   admin (via service_role, bypassa RLS de storage) — não precisa configurar
+   policy nenhuma no bucket.
 
 ## Checklist: Mercado Pago (fica para o final)
 

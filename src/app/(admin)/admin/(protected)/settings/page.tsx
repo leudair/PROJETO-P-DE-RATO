@@ -11,6 +11,7 @@ export default async function SettingsPage() {
         defaultValues={{
           teamName: settings.team_name,
           defaultMensalidadeAmount: settings.default_mensalidade_amount,
+          bannerImageUrl: settings.banner_image_url,
         }}
       />
     </div>

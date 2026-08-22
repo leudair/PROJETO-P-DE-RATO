@@ -24,6 +24,17 @@ export function SponsorForm() {
         </div>
       </div>
 
+      <div className="space-y-1">
+        <label className="text-xs font-medium text-foreground">Logo (opcional)</label>
+        <input
+          name="logo"
+          type="file"
+          accept="image/png,image/jpeg,image/webp,image/gif"
+          className="w-full rounded-md border border-border px-3 py-2 text-sm"
+        />
+        <p className="text-xs text-muted">PNG, JPEG, WEBP ou GIF, até 5MB. Sem logo, aparece só o nome.</p>
+      </div>
+
       {state?.error && <p className="text-sm text-red-600">{state.error}</p>}
       {state?.success && <p className="text-sm text-success">{state.success}</p>}
 

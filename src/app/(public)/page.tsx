@@ -9,11 +9,28 @@ import { SponsorsFooter } from "./sponsors-footer";
 export const dynamic = "force-dynamic";
 
 export default async function PublicStatusPage() {
-  const { teamName, defaultMensalidadeAmount, referenceMonth, players, sponsors, caixinhaContributions, totals } =
-    await getPublicStatus();
+  const {
+    teamName,
+    bannerImageUrl,
+    defaultMensalidadeAmount,
+    referenceMonth,
+    players,
+    sponsors,
+    caixinhaContributions,
+    totals,
+  } = await getPublicStatus();
 
   return (
     <main className="mx-auto min-h-screen max-w-2xl px-4 py-10">
+      {bannerImageUrl && (
+        // eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao
+        <img
+          src={bannerImageUrl}
+          alt={teamName}
+          className="mb-6 h-40 w-full rounded-xl object-cover sm:h-56"
+        />
+      )}
+
       <div className="mb-8 flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-primary">{teamName}</h1>

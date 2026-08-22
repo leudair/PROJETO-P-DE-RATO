@@ -31,11 +31,13 @@ export async function listSponsors() {
   return data;
 }
 
-export async function createSponsor(input: z.infer<typeof CreateSponsorSchema>) {
+export async function createSponsor(input: z.infer<typeof CreateSponsorSchema> & { logoUrl?: string }) {
   await requireAdmin();
   const supabase = await createClient();
 
-  const { error } = await supabase.from("sponsors").insert({ name: input.name, website_url: input.websiteUrl });
+  const { error } = await supabase
+    .from("sponsors")
+    .insert({ name: input.name, website_url: input.websiteUrl, logo_url: input.logoUrl });
 
   if (error) throw error;
 }

@@ -35,16 +35,29 @@ export async function proxy(request: NextRequest) {
   const isAdminRoute = pathname.startsWith("/admin");
   const isLoginRoute = pathname === "/admin/login";
 
+  // Ao redirecionar, precisa copiar os cookies que o Supabase acabou de
+  // renovar em `response` (setAll acima) para a resposta de redirect —
+  // senao o token renovado nunca chega no navegador, o cookie antigo
+  // continua sendo enviado, e cada request tenta renovar de novo. Isso
+  // causava um loop infinito entre /admin e /admin/login.
   if (isAdminRoute && !isLoginRoute && !user) {
     const url = request.nextUrl.clone();
     url.pathname = "/admin/login";
-    return NextResponse.redirect(url);
+    const redirectResponse = NextResponse.redirect(url);
+    for (const cookie of response.cookies.getAll()) {
+      redirectResponse.cookies.set(cookie);
+    }
+    return redirectResponse;
   }
 
   if (isLoginRoute && user) {
     const url = request.nextUrl.clone();
     url.pathname = "/admin";
-    return NextResponse.redirect(url);
+    const redirectResponse = NextResponse.redirect(url);
+    for (const cookie of response.cookies.getAll()) {
+      redirectResponse.cookies.set(cookie);
+    }
+    return redirectResponse;
   }
 
   return response;

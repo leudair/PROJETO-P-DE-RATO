@@ -9,6 +9,7 @@ type Player = {
   name: string;
   position: PlayerPosition | null;
   photoUrl: string | null;
+  age: number | null;
   status: "paid" | "pending" | "exempt";
 };
 

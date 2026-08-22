@@ -32,7 +32,7 @@ export async function getPublicStatus() {
       .single(),
     admin
       .from("players")
-      .select("id, name, position, photo_url")
+      .select("id, name, position, photo_url, age")
       .eq("active", true)
       .order("name", { ascending: true }),
     // sem filtro de reference_month aqui: mensalidade usa reference_month,
@@ -75,6 +75,7 @@ export async function getPublicStatus() {
         name: player.name,
         position: player.position,
         photoUrl: player.photo_url,
+        age: player.age,
         status: isGoalkeeper
           ? ("exempt" as const)
           : payment?.status === "paid"

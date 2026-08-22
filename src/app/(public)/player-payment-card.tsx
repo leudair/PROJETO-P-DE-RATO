@@ -16,6 +16,7 @@ export function PlayerPaymentCard({
     name: string;
     position: PlayerPosition | null;
     photoUrl: string | null;
+    age: number | null;
     status: "paid" | "pending" | "exempt";
   };
   defaultMensalidadeAmount: number;
@@ -33,19 +34,22 @@ export function PlayerPaymentCard({
 
   return (
     <div className={`overflow-hidden rounded-xl border border-border bg-surface ${open ? "col-span-2" : ""}`}>
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        className="flex w-full flex-col items-center gap-1 px-2 py-3 text-center"
-      >
-        <PlayerAvatar name={player.name} photoUrl={player.photoUrl} />
-        <span className="w-full truncate text-sm font-medium text-foreground">{player.name}</span>
-        {player.position && <p className="text-xs text-muted">{POSITION_LABEL[player.position]}</p>}
-        <StatusBadge status={player.status} />
+      <button type="button" onClick={() => setOpen((v) => !v)} className="block w-full text-center">
+        <PlayerFigure name={player.name} photoUrl={player.photoUrl} />
+        <div className="space-y-0.5 px-2 pb-3 pt-2">
+          <p className="truncate text-sm font-medium text-foreground">{player.name}</p>
+          <p className="text-xs text-muted">
+            {player.position ? POSITION_LABEL[player.position] : "—"}
+            {player.age ? ` · ${player.age} anos` : ""}
+          </p>
+          <div className="flex justify-center pt-1">
+            <StatusBadge status={player.status} />
+          </div>
+        </div>
       </button>
 
       {open && (
-        <div className="space-y-5 border-t border-border p-4">
+        <div className="space-y-5 border-t border-border p-4 text-left">
           {!isGoalkeeper && (
             <div>
               <p className="mb-2 text-sm text-foreground">Mensalidade do mês</p>
@@ -106,10 +110,14 @@ export function PlayerPaymentCard({
   );
 }
 
-function PlayerAvatar({ name, photoUrl }: { name: string; photoUrl: string | null }) {
+function PlayerFigure({ name, photoUrl }: { name: string; photoUrl: string | null }) {
   if (photoUrl) {
-    // eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao
-    return <img src={photoUrl} alt={name} className="h-12 w-12 shrink-0 rounded-full object-cover" />;
+    return (
+      <div className="aspect-[3/4] w-full bg-surface-2">
+        {/* eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao */}
+        <img src={photoUrl} alt={name} className="h-full w-full object-contain" />
+      </div>
+    );
   }
 
   const initials = name
@@ -119,9 +127,11 @@ function PlayerAvatar({ name, photoUrl }: { name: string; photoUrl: string | nul
     .join("");
 
   return (
-    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-surface-2 text-sm font-medium text-muted">
-      {initials}
-    </span>
+    <div className="flex aspect-[3/4] w-full items-center justify-center bg-surface-2">
+      <span className="flex h-14 w-14 items-center justify-center rounded-full bg-surface text-lg font-medium text-muted">
+        {initials}
+      </span>
+    </div>
   );
 }
 

@@ -15,6 +15,10 @@ export const CreatePlayerSchema = z.object({
     .union([z.enum(POSITIONS), z.literal("")])
     .optional()
     .transform((v) => (v ? v : null)),
+  age: z
+    .union([z.coerce.number().int().positive().max(99), z.literal("")])
+    .optional()
+    .transform((v) => (v ? v : null)),
 });
 
 export const UpdatePlayerSchema = CreatePlayerSchema.extend({
@@ -45,9 +49,13 @@ export async function createPlayer(input: z.infer<typeof CreatePlayerSchema> & {
   await requireAdmin();
   const supabase = await createClient();
 
-  const { error } = await supabase
-    .from("players")
-    .insert({ name: input.name, phone: input.phone, position: input.position, photo_url: input.photoUrl });
+  const { error } = await supabase.from("players").insert({
+    name: input.name,
+    phone: input.phone,
+    position: input.position,
+    age: input.age,
+    photo_url: input.photoUrl,
+  });
 
   if (error) throw error;
 }
@@ -64,6 +72,7 @@ export async function updatePlayer(
       name: input.name,
       phone: input.phone,
       position: input.position,
+      age: input.age,
       // so sobrescreve a foto quando uma nova foi enviada nesse submit
       ...(input.photoUrl ? { photo_url: input.photoUrl } : {}),
     })

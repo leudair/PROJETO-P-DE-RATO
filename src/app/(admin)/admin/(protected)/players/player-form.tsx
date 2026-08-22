@@ -15,6 +15,7 @@ export function PlayerForm({
     name: string;
     phone: string | null;
     position: PlayerPosition | null;
+    age: number | null;
     photoUrl: string | null;
   };
 }) {
@@ -46,21 +47,34 @@ export function PlayerForm({
         </div>
       </div>
 
-      <div className="space-y-1">
-        <label className="text-xs font-medium text-foreground">Posição</label>
-        <select
-          name="position"
-          defaultValue={defaultValues?.position ?? ""}
-          className="w-full rounded-md border border-border px-3 py-2 text-sm"
-        >
-          <option value="">Não informada</option>
-          {POSITIONS.map((position) => (
-            <option key={position} value={position}>
-              {POSITION_LABEL[position]}
-            </option>
-          ))}
-        </select>
-        <p className="text-xs text-muted">Goleiro fica isento da mensalidade automaticamente.</p>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-1">
+          <label className="text-xs font-medium text-foreground">Posição</label>
+          <select
+            name="position"
+            defaultValue={defaultValues?.position ?? ""}
+            className="w-full rounded-md border border-border px-3 py-2 text-sm"
+          >
+            <option value="">Não informada</option>
+            {POSITIONS.map((position) => (
+              <option key={position} value={position}>
+                {POSITION_LABEL[position]}
+              </option>
+            ))}
+          </select>
+          <p className="text-xs text-muted">Goleiro fica isento da mensalidade automaticamente.</p>
+        </div>
+        <div className="space-y-1">
+          <label className="text-xs font-medium text-foreground">Idade (opcional)</label>
+          <input
+            name="age"
+            type="number"
+            min="1"
+            max="99"
+            defaultValue={defaultValues?.age ?? ""}
+            className="w-full rounded-md border border-border px-3 py-2 text-sm"
+          />
+        </div>
       </div>
 
       <div className="space-y-1">
@@ -70,7 +84,7 @@ export function PlayerForm({
           <img
             src={defaultValues.photoUrl}
             alt={defaultValues.name}
-            className="mb-2 h-16 w-16 rounded-full object-cover"
+            className="mb-2 h-32 w-24 rounded-md border border-border bg-surface-2 object-contain"
           />
         )}
         <input
@@ -79,7 +93,10 @@ export function PlayerForm({
           accept="image/png,image/jpeg,image/webp,image/gif"
           className="w-full rounded-md border border-border px-3 py-2 text-sm"
         />
-        <p className="text-xs text-muted">PNG, JPEG, WEBP ou GIF, até 5MB. Aparece ao lado do nome na página pública.</p>
+        <p className="text-xs text-muted">
+          PNG (de preferência de corpo inteiro, fundo transparente), até 5MB. Aparece dentro do card do
+          jogador na página pública.
+        </p>
       </div>
 
       {state?.error && <p className="text-sm text-red-600">{state.error}</p>}

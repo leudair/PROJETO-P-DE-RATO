@@ -12,7 +12,7 @@ type Player = {
   status: "paid" | "pending" | "exempt";
 };
 
-const INITIAL_COUNT = 5;
+const INITIAL_COUNT = 10;
 
 export function PlayersList({
   players,
@@ -25,23 +25,25 @@ export function PlayersList({
   const visiblePlayers = showAll ? players : players.slice(0, INITIAL_COUNT);
   const hiddenCount = players.length - INITIAL_COUNT;
 
+  if (players.length === 0) {
+    return (
+      <p className="rounded-xl border border-border bg-surface px-4 py-6 text-center text-muted">
+        Nenhum jogador cadastrado ainda.
+      </p>
+    );
+  }
+
   return (
-    <div className="space-y-3">
+    <div className="grid grid-cols-2 gap-2 sm:gap-3">
       {visiblePlayers.map((player) => (
         <PlayerPaymentCard key={player.id} player={player} defaultMensalidadeAmount={defaultMensalidadeAmount} />
       ))}
-
-      {players.length === 0 && (
-        <p className="rounded-xl border border-border bg-surface px-4 py-6 text-center text-muted">
-          Nenhum jogador cadastrado ainda.
-        </p>
-      )}
 
       {!showAll && hiddenCount > 0 && (
         <button
           type="button"
           onClick={() => setShowAll(true)}
-          className="w-full rounded-xl border border-dashed border-border py-3 text-sm font-medium text-primary hover:bg-surface-2"
+          className="col-span-2 rounded-xl border border-dashed border-border py-3 text-sm font-medium text-primary hover:bg-surface-2"
         >
           Ver mais {hiddenCount} jogador{hiddenCount > 1 ? "es" : ""}
         </button>
@@ -51,7 +53,7 @@ export function PlayersList({
         <button
           type="button"
           onClick={() => setShowAll(false)}
-          className="w-full rounded-xl border border-dashed border-border py-3 text-sm font-medium text-muted hover:bg-surface-2"
+          className="col-span-2 rounded-xl border border-dashed border-border py-3 text-sm font-medium text-muted hover:bg-surface-2"
         >
           Ver menos
         </button>

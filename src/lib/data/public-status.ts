@@ -62,21 +62,27 @@ export async function getPublicStatus() {
       .map((p) => [p.player_id, p])
   );
 
-  const playerStatus = players.map((player) => {
-    const payment = mensalidadeByPlayer.get(player.id);
-    const isGoalkeeper = player.position === "goleiro";
-    return {
-      id: player.id,
-      name: player.name,
-      position: player.position,
-      photoUrl: player.photo_url,
-      status: isGoalkeeper
-        ? ("exempt" as const)
-        : payment?.status === "paid"
-          ? ("paid" as const)
-          : ("pending" as const),
-    };
-  });
+  // Quem ainda nao pagou aparece primeiro (prioridade de cobranca visual);
+  // isento (goleiro) fica no meio; quem ja pagou vai pro final da lista.
+  const STATUS_ORDER = { pending: 0, exempt: 1, paid: 2 };
+
+  const playerStatus = players
+    .map((player) => {
+      const payment = mensalidadeByPlayer.get(player.id);
+      const isGoalkeeper = player.position === "goleiro";
+      return {
+        id: player.id,
+        name: player.name,
+        position: player.position,
+        photoUrl: player.photo_url,
+        status: isGoalkeeper
+          ? ("exempt" as const)
+          : payment?.status === "paid"
+            ? ("paid" as const)
+            : ("pending" as const),
+      };
+    })
+    .sort((a, b) => STATUS_ORDER[a.status] - STATUS_ORDER[b.status] || a.name.localeCompare(b.name));
 
   const caixinhaContributions = payments
     .filter((p) => p.type === "caixinha" && p.status === "paid" && isInCurrentCalendarMonth(p.created_at))

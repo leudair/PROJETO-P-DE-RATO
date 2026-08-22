@@ -32,23 +32,16 @@ export function PlayerPaymentCard({
   );
 
   return (
-    <div className="overflow-hidden rounded-xl border border-border bg-surface">
+    <div className={`overflow-hidden rounded-xl border border-border bg-surface ${open ? "col-span-2" : ""}`}>
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left"
+        className="flex w-full flex-col items-center gap-1 px-2 py-3 text-center"
       >
-        <div className="flex min-w-0 items-center gap-3">
-          <PlayerAvatar name={player.name} photoUrl={player.photoUrl} />
-          <div className="min-w-0">
-            <span className="block truncate font-medium text-foreground">{player.name}</span>
-            {player.position && <p className="text-xs text-muted">{POSITION_LABEL[player.position]}</p>}
-          </div>
-        </div>
-        <div className="flex shrink-0 items-center gap-3">
-          <StatusBadge status={player.status} />
-          <span className="text-xs text-muted">{open ? "Fechar" : "Pagar"}</span>
-        </div>
+        <PlayerAvatar name={player.name} photoUrl={player.photoUrl} />
+        <span className="w-full truncate text-sm font-medium text-foreground">{player.name}</span>
+        {player.position && <p className="text-xs text-muted">{POSITION_LABEL[player.position]}</p>}
+        <StatusBadge status={player.status} />
       </button>
 
       {open && (
@@ -99,6 +92,14 @@ export function PlayerPaymentCard({
             </form>
             <PixResult state={caixinhaState} />
           </div>
+
+          <button
+            type="button"
+            onClick={() => setOpen(false)}
+            className="text-xs text-muted hover:text-foreground"
+          >
+            Fechar
+          </button>
         </div>
       )}
     </div>
@@ -108,7 +109,7 @@ export function PlayerPaymentCard({
 function PlayerAvatar({ name, photoUrl }: { name: string; photoUrl: string | null }) {
   if (photoUrl) {
     // eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao
-    return <img src={photoUrl} alt={name} className="h-10 w-10 shrink-0 rounded-full object-cover" />;
+    return <img src={photoUrl} alt={name} className="h-12 w-12 shrink-0 rounded-full object-cover" />;
   }
 
   const initials = name
@@ -118,7 +119,7 @@ function PlayerAvatar({ name, photoUrl }: { name: string; photoUrl: string | nul
     .join("");
 
   return (
-    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface-2 text-sm font-medium text-muted">
+    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-surface-2 text-sm font-medium text-muted">
       {initials}
     </span>
   );

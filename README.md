@@ -25,32 +25,47 @@ esperado até o checklist do Supabase ser concluído.
 
 ## Checklist: Supabase (obrigatório para o app funcionar de verdade)
 
-1. Criar um projeto em [supabase.com/dashboard](https://supabase.com/dashboard).
+**Importante:** as tabelas do caixa-time vivem no schema **`caixa_time`**,
+não em `public`. Isso é proposital — o projeto Supabase usado pode ser
+compartilhado com outro produto (ex: o plano free só permite alguns
+projetos gratuitos por organização), e um schema próprio isola
+completamente as tabelas de um app das do outro, sem risco de colisão de
+nomes e sem precisar pagar por um projeto dedicado. Se você tiver um
+projeto Supabase totalmente livre só para isso, pode usar `caixa_time`
+mesmo assim (não custa nada extra) ou trocar por `public` em todas as
+migrations + `db: { schema: ... }` nos 3 clients em `src/lib/supabase/`.
+
+1. Criar (ou reaproveitar) um projeto em
+   [supabase.com/dashboard](https://supabase.com/dashboard).
 2. Preencher em `.env.local`: `NEXT_PUBLIC_SUPABASE_URL`,
    `NEXT_PUBLIC_SUPABASE_ANON_KEY` e `SUPABASE_SERVICE_ROLE_KEY` (em
    Project Settings > API).
-3. Aplicar a migration: `npx supabase link` e depois
-   `npx supabase db push` (ou rodar o conteúdo de
-   `supabase/migrations/0001_init.sql` direto no SQL Editor do Supabase).
-4. Gerar os tipos reais (substitui o `database.types.ts` escrito à mão):
+3. Rodar o conteúdo de `supabase/migrations/0001_init.sql` até
+   `0004_banner_images.sql`, em ordem, no SQL Editor do Supabase (sem CLI
+   linkado neste setup — `npx supabase link`/`db push` não foram usados).
+4. **Expor o schema na API**: Project Settings → API → **Exposed schemas**
+   → adicionar `caixa_time` à lista (por padrão só `public` está exposto;
+   sem isso o PostgREST retorna 404 pra qualquer tabela do app).
+5. Gerar os tipos reais (substitui o `database.types.ts` escrito à mão):
    ```bash
-   npx supabase gen types typescript --linked > src/lib/supabase/database.types.ts
+   npx supabase gen types typescript --linked --schema caixa_time > src/lib/supabase/database.types.ts
    ```
-5. Criar o primeiro admin manualmente (não há tela de cadastro, é
+6. Criar o primeiro admin manualmente (não há tela de cadastro, é
    intencional — time pequeno e de confiança):
    - Authentication > Users > "Add user" no dashboard do Supabase, com
      email/senha.
    - No SQL Editor, rodar:
      ```sql
-     insert into public.profiles (id, full_name)
+     insert into caixa_time.profiles (id, full_name)
      values ('<uuid do usuario criado acima>', 'Seu nome');
      ```
-6. Logar em `/admin/login` com esse email/senha.
-7. Para o banner de imagem (topo da página pública) e logo de patrocinador
+7. Logar em `/admin/login` com esse email/senha.
+8. Para o banner de imagem (topo da página pública) e logo de patrocinador
    funcionarem, criar um bucket público no Storage: **Storage → New bucket**,
-   nome `public`, marcar **Public bucket**. O upload em si é feito pelo
-   admin (via service_role, bypassa RLS de storage) — não precisa configurar
-   policy nenhuma no bucket.
+   nome `caixa-time-media` (nome específico para não colidir com buckets de
+   outro produto no mesmo projeto), marcar **Public bucket**. O upload em
+   si é feito pelo admin (via service_role, bypassa RLS de storage) — não
+   precisa configurar policy nenhuma no bucket.
 
 ## Checklist: Mercado Pago (fica para o final)
 
@@ -88,7 +103,7 @@ src/
     data/                   → camada de dados (auth, players, payments, settings, public-status)
     mercadopago/            → cliente isolado da API do Mercado Pago
     utils/                  → formatacao de moeda e mes
-supabase/migrations/0001_init.sql → schema completo (tabelas + RLS)
+supabase/migrations/*.sql → schema completo (tabelas + RLS), no schema "caixa_time"
 ```
 
 ## Deploy

@@ -5,10 +5,12 @@ import { supabaseAnonKey, supabaseUrl } from "./env";
 import type { Database } from "./database.types";
 
 // Um client por request — nunca reaproveitar entre requisicoes.
+// db.schema: "caixa_time" — ver nota em client.ts.
 export async function createClient() {
   const cookieStore = await cookies();
 
-  return createServerClient<Database>(supabaseUrl, supabaseAnonKey, {
+  return createServerClient<Database, "caixa_time">(supabaseUrl, supabaseAnonKey, {
+    db: { schema: "caixa_time" },
     cookies: {
       getAll() {
         return cookieStore.getAll();

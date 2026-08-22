@@ -5,7 +5,7 @@ import { requireAdmin } from "./auth";
 import { getTeamSettings } from "./settings";
 import type { Database, PaymentStatus, PaymentType } from "@/lib/supabase/database.types";
 
-type PaymentRow = Database["public"]["Tables"]["payments"]["Row"];
+type PaymentRow = Database["caixa_time"]["Tables"]["payments"]["Row"];
 export type PaymentWithPlayer = PaymentRow & { players: { name: string } | null };
 
 export const CreateCaixinhaSchema = z.object({

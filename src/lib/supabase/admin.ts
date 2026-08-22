@@ -9,8 +9,10 @@ import type { Database } from "./database.types";
 // Mercado Pago, camada de dados do admin, e a leitura da pagina publica
 // de status (que nunca deve depender de policy `anon`, ver
 // src/lib/data/public-status.ts).
+// db.schema: "caixa_time" — ver nota em client.ts.
 export function createAdminClient() {
-  return createSupabaseClient<Database>(supabaseUrl, supabaseServiceRoleKey(), {
+  return createSupabaseClient<Database, "caixa_time">(supabaseUrl, supabaseServiceRoleKey(), {
+    db: { schema: "caixa_time" },
     auth: {
       autoRefreshToken: false,
       persistSession: false,

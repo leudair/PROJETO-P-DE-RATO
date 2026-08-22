@@ -3,7 +3,7 @@ import { logout } from "@/app/logout-action";
 import { ThemeToggle } from "@/components/theme-toggle";
 import type { Database } from "@/lib/supabase/database.types";
 
-type Profile = Database["public"]["Tables"]["profiles"]["Row"];
+type Profile = Database["caixa_time"]["Tables"]["profiles"]["Row"];
 
 export function NavAdmin({ profile }: { profile: Profile }) {
   return (

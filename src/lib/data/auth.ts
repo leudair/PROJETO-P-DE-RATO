@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { Database } from "@/lib/supabase/database.types";
 
-type Profile = Database["public"]["Tables"]["profiles"]["Row"];
+type Profile = Database["caixa_time"]["Tables"]["profiles"]["Row"];
 
 // cache() garante uma unica consulta por render, mesmo chamada em
 // varios Server Components/Actions na mesma requisicao.

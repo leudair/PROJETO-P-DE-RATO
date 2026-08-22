@@ -1,7 +1,9 @@
-// Gerado manualmente a partir de supabase/migrations/0001_init.sql —
-// nao ha projeto Supabase hospedado ainda para rodar `supabase gen types`.
-// Assim que o projeto for criado e a migration aplicada, substituir por:
-//   supabase gen types typescript --linked > src/lib/supabase/database.types.ts
+// Gerado manualmente a partir das migrations em supabase/migrations/ — sem
+// CLI linkado neste ambiente para rodar `supabase gen types`. As tabelas
+// vivem no schema "caixa_time" (nao "public") porque o projeto Supabase e
+// compartilhado com outro produto do usuario — ver README. Assim que
+// houver CLI linkado, substituir por:
+//   supabase gen types typescript --linked --schema caixa_time > src/lib/supabase/database.types.ts
 
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
@@ -10,7 +12,7 @@ export type PaymentStatus = "pending" | "paid" | "cancelled";
 export type PlayerPosition = "goleiro" | "zagueiro" | "lateral" | "volante" | "meia" | "atacante";
 
 export interface Database {
-  public: {
+  caixa_time: {
     Tables: {
       profiles: {
         Row: {

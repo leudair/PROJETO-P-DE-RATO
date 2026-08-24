@@ -20,6 +20,7 @@ export default async function PublicStatusPage() {
     pickupGameBannerUrl,
     playerCardMediaBannerUrl,
     playerCardInfoBannerUrl,
+    playerAvatarFrameUrl,
     defaultMensalidadeAmount,
     referenceMonth,
     players,
@@ -66,6 +67,7 @@ export default async function PublicStatusPage() {
           defaultMensalidadeAmount={defaultMensalidadeAmount}
           mediaBannerUrl={playerCardMediaBannerUrl}
           infoBannerUrl={playerCardInfoBannerUrl}
+          avatarFrameUrl={playerAvatarFrameUrl}
         />
       </div>
 

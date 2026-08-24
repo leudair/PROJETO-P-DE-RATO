@@ -46,6 +46,7 @@ export interface Database {
           pickup_game_banner_url: string | null;
           player_card_media_banner_url: string | null;
           player_card_info_banner_url: string | null;
+          player_avatar_frame_url: string | null;
           updated_at: string;
         };
         Insert: {
@@ -58,6 +59,7 @@ export interface Database {
           pickup_game_banner_url?: string | null;
           player_card_media_banner_url?: string | null;
           player_card_info_banner_url?: string | null;
+          player_avatar_frame_url?: string | null;
           updated_at?: string;
         };
         Update: {
@@ -70,6 +72,7 @@ export interface Database {
           pickup_game_banner_url?: string | null;
           player_card_media_banner_url?: string | null;
           player_card_info_banner_url?: string | null;
+          player_avatar_frame_url?: string | null;
           updated_at?: string;
         };
         Relationships: [];

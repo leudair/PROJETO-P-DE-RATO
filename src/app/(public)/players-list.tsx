@@ -22,11 +22,13 @@ export function PlayersList({
   defaultMensalidadeAmount,
   mediaBannerUrl,
   infoBannerUrl,
+  avatarFrameUrl,
 }: {
   players: Player[];
   defaultMensalidadeAmount: number;
   mediaBannerUrl: string | null;
   infoBannerUrl: string | null;
+  avatarFrameUrl: string | null;
 }) {
   const [showAll, setShowAll] = useState(false);
   const visiblePlayers = showAll ? players : players.slice(0, INITIAL_COUNT);
@@ -49,6 +51,7 @@ export function PlayersList({
           defaultMensalidadeAmount={defaultMensalidadeAmount}
           mediaBannerUrl={mediaBannerUrl}
           infoBannerUrl={infoBannerUrl}
+          avatarFrameUrl={avatarFrameUrl}
         />
       ))}
 

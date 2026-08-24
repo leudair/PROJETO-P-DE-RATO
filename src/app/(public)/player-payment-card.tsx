@@ -16,6 +16,7 @@ export function PlayerPaymentCard({
   defaultMensalidadeAmount,
   mediaBannerUrl,
   infoBannerUrl,
+  avatarFrameUrl,
 }: {
   player: {
     id: string;
@@ -30,6 +31,7 @@ export function PlayerPaymentCard({
   defaultMensalidadeAmount: number;
   mediaBannerUrl: string | null;
   infoBannerUrl: string | null;
+  avatarFrameUrl: string | null;
 }) {
   const [open, setOpen] = useState(false);
   const isGoalkeeper = player.position === "goleiro";
@@ -50,7 +52,12 @@ export function PlayerPaymentCard({
         onClick={() => setOpen((v) => !v)}
         className="flex w-full items-center gap-3 px-3 py-3 text-left"
       >
-        <PlayerThumb name={player.name} photoUrl={player.photoUrl} status={player.status} />
+        <PlayerThumb
+          name={player.name}
+          photoUrl={player.photoUrl}
+          status={player.status}
+          frameUrl={avatarFrameUrl}
+        />
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-medium text-foreground">{player.name}</p>
           <p className="text-xs text-muted">
@@ -200,10 +207,12 @@ function PlayerThumb({
   name,
   photoUrl,
   status,
+  frameUrl,
 }: {
   name: string;
   photoUrl: string | null;
   status: PlayerStatus;
+  frameUrl: string | null;
 }) {
   const dot = STATUS_DOT[status];
   // Zoom calibrado pra fotos/videos de corpo inteiro: mostra so o rosto,
@@ -241,8 +250,16 @@ function PlayerThumb({
             .join("")}
         </span>
       )}
+      {frameUrl && (
+        // eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao
+        <img
+          src={frameUrl}
+          alt=""
+          className="pointer-events-none absolute left-1/2 top-1/2 h-[60px] w-[60px] -translate-x-1/2 -translate-y-1/2 select-none"
+        />
+      )}
       <span
-        className={`absolute -bottom-0.5 -right-0.5 flex h-5 w-5 items-center justify-center rounded-full border-2 border-surface text-xs font-bold ${dot.className}`}
+        className={`absolute -bottom-0.5 -right-0.5 z-10 flex h-5 w-5 items-center justify-center rounded-full border-2 border-surface text-xs font-bold ${dot.className}`}
         title={status}
       >
         {dot.icon}

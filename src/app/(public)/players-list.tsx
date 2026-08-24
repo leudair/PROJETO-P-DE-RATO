@@ -20,9 +20,13 @@ const INITIAL_COUNT = 10;
 export function PlayersList({
   players,
   defaultMensalidadeAmount,
+  mediaBannerUrl,
+  infoBannerUrl,
 }: {
   players: Player[];
   defaultMensalidadeAmount: number;
+  mediaBannerUrl: string | null;
+  infoBannerUrl: string | null;
 }) {
   const [showAll, setShowAll] = useState(false);
   const visiblePlayers = showAll ? players : players.slice(0, INITIAL_COUNT);
@@ -39,7 +43,13 @@ export function PlayersList({
   return (
     <div className="grid grid-cols-2 gap-2 sm:gap-3">
       {visiblePlayers.map((player) => (
-        <PlayerPaymentCard key={player.id} player={player} defaultMensalidadeAmount={defaultMensalidadeAmount} />
+        <PlayerPaymentCard
+          key={player.id}
+          player={player}
+          defaultMensalidadeAmount={defaultMensalidadeAmount}
+          mediaBannerUrl={mediaBannerUrl}
+          infoBannerUrl={infoBannerUrl}
+        />
       ))}
 
       {!showAll && hiddenCount > 0 && (

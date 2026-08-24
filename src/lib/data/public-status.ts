@@ -38,7 +38,7 @@ export async function getPublicStatus() {
     admin
       .from("team_settings")
       .select(
-        "team_name, default_mensalidade_amount, banner_image_url, crest_image_url, top_banner_url, pickup_game_banner_url"
+        "team_name, default_mensalidade_amount, banner_image_url, crest_image_url, top_banner_url, pickup_game_banner_url, player_card_media_banner_url, player_card_info_banner_url"
       )
       .eq("id", 1)
       .single(),
@@ -138,6 +138,8 @@ export async function getPublicStatus() {
     crestImageUrl: settings?.crest_image_url ?? null,
     topBannerUrl: settings?.top_banner_url ?? null,
     pickupGameBannerUrl: settings?.pickup_game_banner_url ?? null,
+    playerCardMediaBannerUrl: settings?.player_card_media_banner_url ?? null,
+    playerCardInfoBannerUrl: settings?.player_card_info_banner_url ?? null,
     defaultMensalidadeAmount: settings?.default_mensalidade_amount ?? 0,
     referenceMonth,
     players: playerStatus,

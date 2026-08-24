@@ -14,6 +14,8 @@ type PlayerStatus = "paid" | "pending" | "late" | "exempt";
 export function PlayerPaymentCard({
   player,
   defaultMensalidadeAmount,
+  mediaBannerUrl,
+  infoBannerUrl,
 }: {
   player: {
     id: string;
@@ -26,6 +28,8 @@ export function PlayerPaymentCard({
     daysLate: number;
   };
   defaultMensalidadeAmount: number;
+  mediaBannerUrl: string | null;
+  infoBannerUrl: string | null;
 }) {
   const [open, setOpen] = useState(false);
   const isGoalkeeper = player.position === "goleiro";
@@ -60,9 +64,12 @@ export function PlayerPaymentCard({
 
       {open && (
         <div className="space-y-5 border-t border-border p-4">
-          <div className="flex h-32 overflow-hidden rounded-lg border border-border bg-surface-2 sm:h-36">
+          <div className="flex h-32 overflow-hidden rounded-lg sm:h-36">
             {player.photoUrl && (
-              <div className="flex w-2/5 shrink-0 items-center justify-center overflow-hidden bg-black/10">
+              <div
+                className="flex w-2/5 shrink-0 items-center justify-center bg-cover bg-center p-2"
+                style={mediaBannerUrl ? { backgroundImage: `url(${mediaBannerUrl})` } : undefined}
+              >
                 {isVideoUrl(player.photoUrl) ? (
                   <video
                     src={player.photoUrl}
@@ -78,13 +85,21 @@ export function PlayerPaymentCard({
                 )}
               </div>
             )}
-            <div className="flex min-w-0 flex-1 flex-col justify-center gap-0.5 p-3">
-              <p className="truncate text-base font-bold text-foreground">{player.name}</p>
-              {player.position && <p className="text-sm text-muted">{POSITION_LABEL[player.position]}</p>}
-              {player.age && <p className="text-sm text-muted">{player.age} anos</p>}
-              {player.birthDate && (
-                <p className="text-xs text-muted">Nasc. {formatBirthDate(player.birthDate)}</p>
-              )}
+            <div
+              className="relative flex min-w-0 flex-1 flex-col justify-center gap-0.5 bg-cover bg-center p-3"
+              style={infoBannerUrl ? { backgroundImage: `url(${infoBannerUrl})` } : undefined}
+            >
+              <div className="absolute inset-0 bg-black/35" />
+              <div className="relative">
+                <p className="truncate text-base font-bold text-white drop-shadow-sm">{player.name}</p>
+                {player.position && (
+                  <p className="text-sm text-white/90 drop-shadow-sm">{POSITION_LABEL[player.position]}</p>
+                )}
+                {player.age && <p className="text-sm text-white/90 drop-shadow-sm">{player.age} anos</p>}
+                {player.birthDate && (
+                  <p className="text-xs text-white/80 drop-shadow-sm">Nasc. {formatBirthDate(player.birthDate)}</p>
+                )}
+              </div>
             </div>
           </div>
 

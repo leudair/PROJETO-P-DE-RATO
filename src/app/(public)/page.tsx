@@ -17,6 +17,8 @@ export default async function PublicStatusPage() {
     crestImageUrl,
     topBannerUrl,
     pickupGameBannerUrl,
+    playerCardMediaBannerUrl,
+    playerCardInfoBannerUrl,
     defaultMensalidadeAmount,
     referenceMonth,
     players,
@@ -51,7 +53,12 @@ export default async function PublicStatusPage() {
       </div>
 
       <div className="mb-6 sm:mb-8">
-        <PlayersList players={players} defaultMensalidadeAmount={defaultMensalidadeAmount} />
+        <PlayersList
+          players={players}
+          defaultMensalidadeAmount={defaultMensalidadeAmount}
+          mediaBannerUrl={playerCardMediaBannerUrl}
+          infoBannerUrl={playerCardInfoBannerUrl}
+        />
       </div>
 
       {caixinhaContributions.length > 0 && (

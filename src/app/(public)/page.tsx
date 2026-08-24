@@ -5,7 +5,7 @@ import { formatReferenceMonth } from "@/lib/utils/month";
 import { isVideoUrl } from "@/lib/utils/media";
 import { PlayersList } from "./players-list";
 import { ExtraFundBanner } from "./extra-fund-banner";
-import { payJerseyWashAction, payPickupGameAction } from "./actions";
+import { payPickupGameAction } from "./actions";
 import { SponsorsFooter } from "./sponsors-footer";
 
 export const dynamic = "force-dynamic";
@@ -115,7 +115,7 @@ export default async function PublicStatusPage() {
         </div>
       </div>
 
-      <div className="mb-6 space-y-3 sm:mb-8">
+      <div className="mb-6 sm:mb-8">
         <ExtraFundBanner
           emoji="⚽"
           title="Jogo avulso"
@@ -123,13 +123,6 @@ export default async function PublicStatusPage() {
           minAmount={20}
           buttonLabel="Contribuir pro jogo avulso"
           action={payPickupGameAction}
-        />
-        <ExtraFundBanner
-          emoji="🧺"
-          title="Coletes"
-          description="Caixinha pra pagar quem lava os coletes do time."
-          buttonLabel="Contribuir pra lavagem"
-          action={payJerseyWashAction}
         />
       </div>
 

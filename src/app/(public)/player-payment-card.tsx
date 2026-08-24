@@ -255,7 +255,7 @@ function PlayerThumb({
         <img
           src={frameUrl}
           alt=""
-          className="pointer-events-none absolute -left-1.5 -top-1.5 h-[60px] w-[60px] select-none"
+          className="pointer-events-none absolute -left-1.5 -top-1.5 h-[60px] w-[60px] max-w-none select-none"
         />
       )}
       <span

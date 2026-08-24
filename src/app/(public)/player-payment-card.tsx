@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { payCaixinhaAction, payMensalidadeAction, type PayState } from "./actions";
+import { payCaixinhaAction, payJerseyWashAction, payMensalidadeAction, type PayState } from "./actions";
 import { StatusBadge } from "@/components/status-badge";
 import { formatBRL } from "@/lib/utils/currency";
 import { POSITION_LABEL } from "@/lib/utils/positions";
@@ -41,6 +41,7 @@ export function PlayerPaymentCard({
     payCaixinhaAction.bind(null, player.id),
     undefined
   );
+  const [jerseyWashState, jerseyWashAction, jerseyWashPending] = useActionState(payJerseyWashAction, undefined);
 
   return (
     <div className={`overflow-hidden rounded-xl border border-border bg-surface ${open ? "col-span-2" : ""}`}>
@@ -64,7 +65,7 @@ export function PlayerPaymentCard({
 
       {open && (
         <div className="space-y-5 border-t border-border p-4">
-          <div className="flex h-32 overflow-hidden rounded-lg sm:h-36">
+          <div className="flex h-32 overflow-hidden rounded-lg border-2 border-accent sm:h-36">
             {player.photoUrl && (
               <div
                 className="flex w-2/5 shrink-0 items-center justify-center bg-cover bg-center p-2"
@@ -103,29 +104,51 @@ export function PlayerPaymentCard({
             </div>
           </div>
 
-          {!isGoalkeeper && (
+          <div className="grid grid-cols-2 gap-3">
             <div>
               <p className="mb-2 text-sm text-foreground">Mensalidade do mês</p>
-              {player.status === "paid" ? (
-                <p className="text-sm text-success">Mensalidade já paga. Obrigado! ⚽</p>
+              {isGoalkeeper ? (
+                <p className="text-sm text-muted">Isento. 🧤</p>
+              ) : player.status === "paid" ? (
+                <p className="text-sm text-success">Paga! ⚽</p>
               ) : (
                 <form action={mensalidadeAction}>
                   <button
                     type="submit"
                     disabled={mensalidadePending}
-                    className="rounded-md bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground disabled:opacity-50"
+                    className="rounded-md bg-accent px-3 py-2 text-sm font-semibold text-accent-foreground disabled:opacity-50"
                   >
-                    {mensalidadePending
-                      ? "Gerando Pix..."
-                      : `Pagar mensalidade — ${formatBRL(defaultMensalidadeAmount)}`}
+                    {mensalidadePending ? "Gerando Pix..." : `Pagar — ${formatBRL(defaultMensalidadeAmount)}`}
                   </button>
                 </form>
               )}
-              <PixResult state={mensalidadeState} />
+              {!isGoalkeeper && <PixResult state={mensalidadeState} />}
             </div>
-          )}
 
-          {isGoalkeeper && <p className="text-sm text-muted">Goleiro é isento da mensalidade. 🧤</p>}
+            <div>
+              <p className="mb-2 text-sm text-foreground">Lavagem dos coletes</p>
+              <form action={jerseyWashAction} className="flex flex-wrap items-center gap-2">
+                <input type="hidden" name="contributorName" value={player.name} />
+                <input
+                  name="amount"
+                  type="number"
+                  step="0.01"
+                  min="1"
+                  placeholder="R$"
+                  required
+                  className="w-16 rounded-md border border-border px-2 py-2 text-sm"
+                />
+                <button
+                  type="submit"
+                  disabled={jerseyWashPending}
+                  className="rounded-md border border-primary px-3 py-2 text-sm font-medium text-primary disabled:opacity-50"
+                >
+                  {jerseyWashPending ? "Gerando..." : "Contribuir"}
+                </button>
+              </form>
+              <PixResult state={jerseyWashState} />
+            </div>
+          </div>
 
           <div>
             <p className="mb-2 text-sm text-foreground">Dar uma caixinha</p>

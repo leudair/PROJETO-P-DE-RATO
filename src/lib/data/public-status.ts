@@ -44,7 +44,7 @@ export async function getPublicStatus() {
       .single(),
     admin
       .from("players")
-      .select("id, name, position, photo_url, birth_date")
+      .select("id, name, position, photo_url, avatar_photo_url, birth_date")
       .eq("active", true)
       .order("name", { ascending: true }),
     // sem filtro de reference_month aqui: mensalidade usa reference_month,
@@ -97,6 +97,7 @@ export async function getPublicStatus() {
         name: player.name,
         position: player.position,
         photoUrl: player.photo_url,
+        avatarPhotoUrl: player.avatar_photo_url,
         birthDate: player.birth_date,
         age: player.birth_date ? calculateAge(player.birth_date) : null,
         status,

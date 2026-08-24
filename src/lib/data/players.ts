@@ -45,7 +45,9 @@ export async function getPlayer(id: string) {
   return data;
 }
 
-export async function createPlayer(input: z.infer<typeof CreatePlayerSchema> & { photoUrl?: string }) {
+export async function createPlayer(
+  input: z.infer<typeof CreatePlayerSchema> & { photoUrl?: string; avatarPhotoUrl?: string }
+) {
   await requireAdmin();
   const supabase = await createClient();
 
@@ -55,13 +57,14 @@ export async function createPlayer(input: z.infer<typeof CreatePlayerSchema> & {
     position: input.position,
     birth_date: input.birthDate,
     photo_url: input.photoUrl,
+    avatar_photo_url: input.avatarPhotoUrl,
   });
 
   if (error) throw error;
 }
 
 export async function updatePlayer(
-  input: z.infer<typeof UpdatePlayerSchema> & { photoUrl?: string }
+  input: z.infer<typeof UpdatePlayerSchema> & { photoUrl?: string; avatarPhotoUrl?: string }
 ) {
   await requireAdmin();
   const supabase = await createClient();
@@ -73,8 +76,9 @@ export async function updatePlayer(
       phone: input.phone,
       position: input.position,
       birth_date: input.birthDate,
-      // so sobrescreve a foto quando uma nova foi enviada nesse submit
+      // so sobrescreve foto/avatar quando um novo arquivo foi enviado nesse submit
       ...(input.photoUrl ? { photo_url: input.photoUrl } : {}),
+      ...(input.avatarPhotoUrl ? { avatar_photo_url: input.avatarPhotoUrl } : {}),
     })
     .eq("id", input.playerId);
 

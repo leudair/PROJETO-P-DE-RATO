@@ -18,6 +18,7 @@ export function PlayerForm({
     position: PlayerPosition | null;
     birthDate: string | null;
     photoUrl: string | null;
+    avatarPhotoUrl: string | null;
   };
 }) {
   const action = mode === "create" ? createPlayerAction : updatePlayerAction;
@@ -106,6 +107,28 @@ export function PlayerForm({
         <p className="text-xs text-muted">
           PNG (de preferência de corpo inteiro, fundo transparente, até 5MB) ou vídeo curto MP4/WEBM (até
           20MB). Aparece dentro do card do jogador na página pública.
+        </p>
+      </div>
+
+      <div className="space-y-1">
+        <label className="text-xs font-medium text-foreground">Foto do avatar (círculo pequeno, opcional)</label>
+        {defaultValues?.avatarPhotoUrl && (
+          // eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao
+          <img
+            src={defaultValues.avatarPhotoUrl}
+            alt={defaultValues.name}
+            className="mb-2 h-24 w-24 rounded-full border border-border bg-surface-2 object-cover"
+          />
+        )}
+        <input
+          name="avatarPhoto"
+          type="file"
+          accept="image/png,image/jpeg,image/webp,image/gif"
+          className="w-full rounded-md border border-border px-3 py-2 text-sm"
+        />
+        <p className="text-xs text-muted">
+          Só imagem estática (sem vídeo), rosto centralizado — aparece na bolinha com moldura ao lado do
+          nome. Se não enviar, a bolinha usa a foto/vídeo de cima.
         </p>
       </div>
 

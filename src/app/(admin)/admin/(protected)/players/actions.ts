@@ -8,7 +8,7 @@ import {
   setPlayerActive,
   updatePlayer,
 } from "@/lib/data/players";
-import { InvalidImageError, uploadPublicMedia } from "@/lib/supabase/storage";
+import { InvalidImageError, uploadPublicImage, uploadPublicMedia } from "@/lib/supabase/storage";
 
 export type PlayerFormState = { error?: string; success?: string } | undefined;
 
@@ -16,6 +16,14 @@ async function uploadPhotoIfPresent(formData: FormData): Promise<string | undefi
   const photoFile = formData.get("photo");
   if (photoFile instanceof File && photoFile.size > 0) {
     return uploadPublicMedia(photoFile, "players");
+  }
+  return undefined;
+}
+
+async function uploadAvatarPhotoIfPresent(formData: FormData): Promise<string | undefined> {
+  const avatarFile = formData.get("avatarPhoto");
+  if (avatarFile instanceof File && avatarFile.size > 0) {
+    return uploadPublicImage(avatarFile, "players-avatar");
   }
   return undefined;
 }
@@ -36,15 +44,17 @@ export async function createPlayerAction(
   }
 
   let photoUrl: string | undefined;
+  let avatarPhotoUrl: string | undefined;
   try {
     photoUrl = await uploadPhotoIfPresent(formData);
+    avatarPhotoUrl = await uploadAvatarPhotoIfPresent(formData);
   } catch (err) {
     if (err instanceof InvalidImageError) return { error: err.message };
     return { error: "Não foi possível enviar a foto." };
   }
 
   try {
-    await createPlayer({ ...parsed.data, photoUrl });
+    await createPlayer({ ...parsed.data, photoUrl, avatarPhotoUrl });
   } catch {
     return { error: "Não foi possível criar o jogador." };
   }
@@ -71,15 +81,17 @@ export async function updatePlayerAction(
   }
 
   let photoUrl: string | undefined;
+  let avatarPhotoUrl: string | undefined;
   try {
     photoUrl = await uploadPhotoIfPresent(formData);
+    avatarPhotoUrl = await uploadAvatarPhotoIfPresent(formData);
   } catch (err) {
     if (err instanceof InvalidImageError) return { error: err.message };
     return { error: "Não foi possível enviar a foto." };
   }
 
   try {
-    await updatePlayer({ ...parsed.data, photoUrl });
+    await updatePlayer({ ...parsed.data, photoUrl, avatarPhotoUrl });
   } catch {
     return { error: "Não foi possível salvar." };
   }

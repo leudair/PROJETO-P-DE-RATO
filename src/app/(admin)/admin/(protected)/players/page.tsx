@@ -40,7 +40,16 @@ export default async function PlayersPage() {
             {players.map((player) => (
               <tr key={player.id} className="border-b border-border last:border-0">
                 <td className="px-4 py-3">
-                  {player.photo_url ? (
+                  {player.avatar_photo_url ? (
+                    <div className="h-8 w-8 overflow-hidden rounded-full bg-surface-2">
+                      {/* eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao */}
+                      <img
+                        src={player.avatar_photo_url}
+                        alt={player.name}
+                        className="h-full w-full object-cover object-top [transform:scale(2.3)_translateY(-6%)] [transform-origin:50%_0%]"
+                      />
+                    </div>
+                  ) : player.photo_url ? (
                     isVideoUrl(player.photo_url) ? (
                       <span className="text-lg" title="Vídeo">
                         🎬

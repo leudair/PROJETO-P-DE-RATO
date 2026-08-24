@@ -23,6 +23,7 @@ export function PlayerPaymentCard({
     name: string;
     position: PlayerPosition | null;
     photoUrl: string | null;
+    avatarPhotoUrl: string | null;
     age: number | null;
     birthDate: string | null;
     status: PlayerStatus;
@@ -54,7 +55,7 @@ export function PlayerPaymentCard({
       >
         <PlayerThumb
           name={player.name}
-          photoUrl={player.photoUrl}
+          photoUrl={player.avatarPhotoUrl ?? player.photoUrl}
           status={player.status}
           frameUrl={avatarFrameUrl}
         />

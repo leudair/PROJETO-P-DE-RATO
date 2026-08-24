@@ -219,7 +219,7 @@ function PlayerThumb({
   // centralizado, em vez do corte padrao do object-fit:cover (que pegava
   // do topo da imagem — cabeca + fundo — ate a cintura).
   const avatarMediaClass =
-    "h-full w-full object-cover object-top [transform:scale(2.6)_translateY(-14%)] [transform-origin:50%_0%]";
+    "h-full w-full object-cover object-top [transform:scale(2.3)_translateY(-6%)] [transform-origin:50%_0%]";
 
   return (
     <div className="relative h-12 w-12 shrink-0">

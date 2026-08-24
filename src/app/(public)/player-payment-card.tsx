@@ -233,7 +233,7 @@ function PlayerThumb({
               playsInline
               preload="metadata"
               onLoadedMetadata={(e) => {
-                e.currentTarget.currentTime = 0.1;
+                e.currentTarget.currentTime = 0.4;
               }}
             />
           ) : (

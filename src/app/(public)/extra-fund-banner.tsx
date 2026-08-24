@@ -13,6 +13,7 @@ export function ExtraFundBanner({
   minAmount,
   buttonLabel,
   action,
+  imageUrl,
 }: {
   emoji: string;
   title: string;
@@ -20,12 +21,20 @@ export function ExtraFundBanner({
   minAmount?: number;
   buttonLabel: string;
   action: Action;
+  imageUrl?: string | null;
 }) {
   const [state, formAction, pending] = useActionState(action, undefined);
 
   return (
-    <div className="overflow-hidden rounded-xl border border-accent/40 bg-accent/10">
-      <div className="p-4 sm:p-5">
+    <div className="overflow-hidden rounded-xl border border-accent/40 bg-accent/10 sm:flex sm:items-stretch">
+      {imageUrl && (
+        <div className="flex items-center justify-center bg-black/10 sm:w-2/5 sm:shrink-0">
+          {/* eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao */}
+          <img src={imageUrl} alt="" className="max-h-56 w-full object-contain sm:max-h-none sm:h-full" />
+        </div>
+      )}
+
+      <div className="p-4 sm:flex-1 sm:p-5">
         <p className="text-base font-semibold text-foreground sm:text-lg">
           {emoji} {title}
         </p>

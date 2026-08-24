@@ -49,15 +49,6 @@ export default async function PublicStatusPage() {
         <ThemeToggle />
       </div>
 
-      {pickupGameBannerUrl && (
-        // eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao
-        <img
-          src={pickupGameBannerUrl}
-          alt="Jogo de onze"
-          className="mb-6 h-32 w-full rounded-xl object-cover sm:mb-8 sm:h-44"
-        />
-      )}
-
       <div className="mb-6 sm:mb-8">
         <PlayersList players={players} defaultMensalidadeAmount={defaultMensalidadeAmount} />
       </div>
@@ -123,6 +114,7 @@ export default async function PublicStatusPage() {
           minAmount={20}
           buttonLabel="Contribuir pro jogo avulso"
           action={payPickupGameAction}
+          imageUrl={pickupGameBannerUrl}
         />
       </div>
 

@@ -206,6 +206,11 @@ function PlayerThumb({
   status: PlayerStatus;
 }) {
   const dot = STATUS_DOT[status];
+  // Zoom calibrado pra fotos/videos de corpo inteiro: mostra so o rosto,
+  // centralizado, em vez do corte padrao do object-fit:cover (que pegava
+  // do topo da imagem — cabeca + fundo — ate a cintura).
+  const avatarMediaClass =
+    "h-full w-full object-cover object-top [transform:scale(2.6)_translateY(-14%)] [transform-origin:50%_0%]";
 
   return (
     <div className="relative h-12 w-12 shrink-0">
@@ -214,17 +219,17 @@ function PlayerThumb({
           {isVideoUrl(photoUrl) ? (
             <video
               src={photoUrl}
-              className="h-full w-full origin-top scale-[2.6] object-cover object-top"
+              className={avatarMediaClass}
               muted
               playsInline
+              preload="metadata"
+              onLoadedMetadata={(e) => {
+                e.currentTarget.currentTime = 0.1;
+              }}
             />
           ) : (
             // eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao
-            <img
-              src={photoUrl}
-              alt={name}
-              className="h-full w-full origin-top scale-[2.6] object-cover object-top"
-            />
+            <img src={photoUrl} alt={name} className={avatarMediaClass} />
           )}
         </div>
       ) : (

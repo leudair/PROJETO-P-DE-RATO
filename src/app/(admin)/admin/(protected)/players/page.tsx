@@ -51,7 +51,7 @@ export default async function PlayersPage() {
                         <img
                           src={player.photo_url}
                           alt={player.name}
-                          className="h-full w-full origin-top scale-[2.6] object-cover object-top"
+                          className="h-full w-full object-cover object-top [transform:scale(2.6)_translateY(-14%)] [transform-origin:50%_0%]"
                         />
                       </div>
                     )

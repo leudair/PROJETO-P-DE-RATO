@@ -62,11 +62,11 @@ export function PlayerPaymentCard({
         <div className="space-y-5 border-t border-border p-4">
           <div className="flex h-32 overflow-hidden rounded-lg border border-border bg-surface-2 sm:h-36">
             {player.photoUrl && (
-              <div className="w-2/5 shrink-0 overflow-hidden bg-black/10">
+              <div className="flex w-2/5 shrink-0 items-center justify-center overflow-hidden bg-black/10">
                 {isVideoUrl(player.photoUrl) ? (
                   <video
                     src={player.photoUrl}
-                    className="h-full w-full object-cover"
+                    className="h-full w-full object-contain"
                     autoPlay
                     loop
                     muted
@@ -74,7 +74,7 @@ export function PlayerPaymentCard({
                   />
                 ) : (
                   // eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao
-                  <img src={player.photoUrl} alt={player.name} className="h-full w-full object-cover" />
+                  <img src={player.photoUrl} alt={player.name} className="h-full w-full object-contain" />
                 )}
               </div>
             )}

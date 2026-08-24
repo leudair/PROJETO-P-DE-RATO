@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getPublicStatus } from "@/lib/data/public-status";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { formatBRL } from "@/lib/utils/currency";
@@ -51,6 +52,13 @@ export default async function PublicStatusPage() {
         </div>
         <ThemeToggle />
       </div>
+
+      <Link
+        href="/sorteio"
+        className="mb-6 flex items-center justify-center gap-2 rounded-xl border border-accent bg-accent/10 px-4 py-3 text-sm font-semibold text-foreground hover:bg-accent/20 sm:mb-8"
+      >
+        ⚔️ Sortear times pro jogo
+      </Link>
 
       <div className="mb-6 sm:mb-8">
         <PlayersList

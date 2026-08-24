@@ -50,7 +50,7 @@ export default async function PlayersPage() {
                       <img
                         src={player.photo_url}
                         alt={player.name}
-                        className="h-8 w-8 rounded-full object-cover"
+                        className="h-8 w-8 rounded-full object-cover object-top"
                       />
                     )
                   ) : (

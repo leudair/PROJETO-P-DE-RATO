@@ -8,6 +8,7 @@ import { PlayersList } from "./players-list";
 import { ExtraFundBanner } from "./extra-fund-banner";
 import { payPickupGameAction } from "./actions";
 import { SponsorsFooter } from "./sponsors-footer";
+import { SponsorsPlaceholder } from "./sponsors-placeholder";
 
 export const dynamic = "force-dynamic";
 
@@ -165,6 +166,7 @@ export default async function PublicStatusPage() {
         ))}
 
       <SponsorsFooter sponsors={sponsors} />
+      <SponsorsPlaceholder />
     </main>
   );
 }

@@ -46,12 +46,14 @@ export default async function PlayersPage() {
                         🎬
                       </span>
                     ) : (
-                      // eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao
-                      <img
-                        src={player.photo_url}
-                        alt={player.name}
-                        className="h-8 w-8 rounded-full object-cover object-top"
-                      />
+                      <div className="h-8 w-8 overflow-hidden rounded-full bg-surface-2">
+                        {/* eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao */}
+                        <img
+                          src={player.photo_url}
+                          alt={player.name}
+                          className="h-full w-full origin-top scale-[2.6] object-cover object-top"
+                        />
+                      </div>
                     )
                   ) : (
                     <span className="text-muted">—</span>

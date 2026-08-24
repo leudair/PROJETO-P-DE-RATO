@@ -212,10 +212,19 @@ function PlayerThumb({
       {photoUrl ? (
         <div className="h-12 w-12 overflow-hidden rounded-full bg-surface-2">
           {isVideoUrl(photoUrl) ? (
-            <video src={photoUrl} className="h-full w-full object-cover object-top" muted playsInline />
+            <video
+              src={photoUrl}
+              className="h-full w-full origin-top scale-[2.6] object-cover object-top"
+              muted
+              playsInline
+            />
           ) : (
             // eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao
-            <img src={photoUrl} alt={name} className="h-full w-full object-cover object-top" />
+            <img
+              src={photoUrl}
+              alt={name}
+              className="h-full w-full origin-top scale-[2.6] object-cover object-top"
+            />
           )}
         </div>
       ) : (

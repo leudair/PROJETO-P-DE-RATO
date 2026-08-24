@@ -22,6 +22,7 @@ export default async function PublicStatusPage() {
     players,
     sponsors,
     caixinhaContributions,
+    pickupGameContributors,
     withdrawals,
     totals,
   } = await getPublicStatus();
@@ -110,12 +111,21 @@ export default async function PublicStatusPage() {
         <ExtraFundBanner
           emoji="⚽"
           title="Jogo avulso"
-          description="Racha com time sorteado na hora. Contribua a partir de R$20."
           minAmount={20}
-          buttonLabel="Contribuir pro jogo avulso"
+          buttonLabel="Contribuir"
           action={payPickupGameAction}
           imageUrl={pickupGameBannerUrl}
         />
+        {pickupGameContributors.length > 0 && (
+          <ul className="mt-2 space-y-1 text-sm">
+            {pickupGameContributors.map((c, i) => (
+              <li key={i} className="flex justify-between rounded-md bg-surface-2 px-3 py-2">
+                <span className="text-foreground">{c.name}</span>
+                <span className="text-success">{formatBRL(c.amount)}</span>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
       {bannerImageUrl &&

@@ -3,19 +3,21 @@ import * as z from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 // Arrecadacao do "jogo avulso" (pelada/racha esporadico com time de onze
-// aleatorio) — independente do elenco fixo, contribuicao anonima (sem
-// vincular a um jogador cadastrado), valor minimo R$20 a criterio de quem
-// paga.
+// aleatorio) — independente do elenco fixo, valor minimo R$20 a criterio de
+// quem paga. O nome de quem contribuiu e' pedido no mesmo formulario (nao
+// um passo separado depois do Pix) — sem isso o dinheiro chega mas ninguem
+// sabe quem pagou.
 export const PickupGameContributionSchema = z.object({
   amount: z.coerce.number().min(20, "O valor mínimo é R$ 20,00.").max(10000, "Valor muito alto."),
+  contributorName: z.string().trim().min(1, "Informe seu nome."),
 });
 
-export async function createPickupGameContribution(amount: number) {
+export async function createPickupGameContribution(input: z.infer<typeof PickupGameContributionSchema>) {
   const admin = createAdminClient();
 
   const { data, error } = await admin
     .from("pickup_game_contributions")
-    .insert({ amount, status: "pending" })
+    .insert({ amount: input.amount, contributor_name: input.contributorName, status: "pending" })
     .select("*")
     .single();
 

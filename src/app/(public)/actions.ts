@@ -107,14 +107,17 @@ export async function payCaixinhaAction(
 }
 
 export async function payPickupGameAction(_prevState: PayState, formData: FormData): Promise<PayState> {
-  const parsed = PickupGameContributionSchema.safeParse({ amount: formData.get("amount") });
+  const parsed = PickupGameContributionSchema.safeParse({
+    amount: formData.get("amount"),
+    contributorName: formData.get("contributorName"),
+  });
 
   if (!parsed.success) {
-    return { status: "error", message: parsed.error.issues[0]?.message ?? "Valor inválido." };
+    return { status: "error", message: parsed.error.issues[0]?.message ?? "Dados inválidos." };
   }
 
   try {
-    const contribution = await createPickupGameContribution(parsed.data.amount);
+    const contribution = await createPickupGameContribution(parsed.data);
     return await generateOrReusePix(contribution, "Jogo avulso", attachPixToPickupGameContribution);
   } catch {
     return { status: "error", message: "Não foi possível iniciar o pagamento." };
@@ -122,14 +125,17 @@ export async function payPickupGameAction(_prevState: PayState, formData: FormDa
 }
 
 export async function payJerseyWashAction(_prevState: PayState, formData: FormData): Promise<PayState> {
-  const parsed = JerseyWashContributionSchema.safeParse({ amount: formData.get("amount") });
+  const parsed = JerseyWashContributionSchema.safeParse({
+    amount: formData.get("amount"),
+    contributorName: formData.get("contributorName"),
+  });
 
   if (!parsed.success) {
-    return { status: "error", message: parsed.error.issues[0]?.message ?? "Valor inválido." };
+    return { status: "error", message: parsed.error.issues[0]?.message ?? "Dados inválidos." };
   }
 
   try {
-    const contribution = await createJerseyWashContribution(parsed.data.amount);
+    const contribution = await createJerseyWashContribution(parsed.data);
     return await generateOrReusePix(contribution, "Lavagem dos coletes", attachPixToJerseyWashContribution);
   } catch {
     return { status: "error", message: "Não foi possível iniciar o pagamento." };

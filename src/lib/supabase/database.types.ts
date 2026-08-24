@@ -156,6 +156,7 @@ export interface Database {
           id: string;
           amount: number;
           status: PaymentStatus;
+          contributor_name: string | null;
           mercado_pago_payment_id: string | null;
           pix_qr_code: string | null;
           pix_copy_paste: string | null;
@@ -166,6 +167,7 @@ export interface Database {
           id?: string;
           amount: number;
           status?: PaymentStatus;
+          contributor_name?: string | null;
           mercado_pago_payment_id?: string | null;
           pix_qr_code?: string | null;
           pix_copy_paste?: string | null;
@@ -176,6 +178,7 @@ export interface Database {
           id?: string;
           amount?: number;
           status?: PaymentStatus;
+          contributor_name?: string | null;
           mercado_pago_payment_id?: string | null;
           pix_qr_code?: string | null;
           pix_copy_paste?: string | null;
@@ -189,6 +192,7 @@ export interface Database {
           id: string;
           amount: number;
           status: PaymentStatus;
+          contributor_name: string | null;
           mercado_pago_payment_id: string | null;
           pix_qr_code: string | null;
           pix_copy_paste: string | null;
@@ -199,6 +203,7 @@ export interface Database {
           id?: string;
           amount: number;
           status?: PaymentStatus;
+          contributor_name?: string | null;
           mercado_pago_payment_id?: string | null;
           pix_qr_code?: string | null;
           pix_copy_paste?: string | null;
@@ -209,6 +214,7 @@ export interface Database {
           id?: string;
           amount?: number;
           status?: PaymentStatus;
+          contributor_name?: string | null;
           mercado_pago_payment_id?: string | null;
           pix_qr_code?: string | null;
           pix_copy_paste?: string | null;

@@ -50,8 +50,8 @@ export async function getPublicStatus() {
     // mas caixinha e' sempre null (nao tem ciclo mensal) — filtrar por
     // reference_month excluiria toda caixinha da consulta.
     admin.from("payments").select("player_id, type, amount, status, reference_month, created_at"),
-    admin.from("pickup_game_contributions").select("amount, status, created_at"),
-    admin.from("jersey_wash_contributions").select("amount, status, created_at"),
+    admin.from("pickup_game_contributions").select("amount, status, contributor_name, created_at"),
+    admin.from("jersey_wash_contributions").select("amount, status, contributor_name, created_at"),
     admin.from("withdrawals").select("id, description, amount, created_at").order("created_at", { ascending: false }),
     admin
       .from("sponsors")
@@ -113,6 +113,14 @@ export async function getPublicStatus() {
   const sum = (rows: { amount: number; status: string }[]) =>
     rows.filter((r) => r.status === "paid").reduce((total, r) => total + r.amount, 0);
 
+  const namedContributors = (rows: { amount: number; status: string; contributor_name: string | null }[]) =>
+    rows
+      .filter((r) => r.status === "paid")
+      .map((r) => ({ name: r.contributor_name ?? "Anônimo", amount: r.amount }));
+
+  const pickupGameContributors = namedContributors(pickupGame);
+  const jerseyWashContributors = namedContributors(jerseyWash);
+
   const totalMensalidade = payments
     .filter((p) => p.type === "mensalidade" && p.status === "paid")
     .reduce((total, p) => total + p.amount, 0);
@@ -133,6 +141,8 @@ export async function getPublicStatus() {
     players: playerStatus,
     sponsors,
     caixinhaContributions,
+    pickupGameContributors,
+    jerseyWashContributors,
     withdrawals,
     totals: {
       mensalidade: totalMensalidade,

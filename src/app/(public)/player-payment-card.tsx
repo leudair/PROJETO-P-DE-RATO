@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { payCaixinhaAction, payMensalidadeAction, type PayState } from "./actions";
+import { payCaixinhaAction, payJerseyWashAction, payMensalidadeAction, type PayState } from "./actions";
 import { StatusBadge } from "@/components/status-badge";
 import { formatBRL } from "@/lib/utils/currency";
 import { POSITION_LABEL } from "@/lib/utils/positions";
@@ -30,6 +30,10 @@ export function PlayerPaymentCard({
   );
   const [caixinhaState, caixinhaAction, caixinhaPending] = useActionState(
     payCaixinhaAction.bind(null, player.id),
+    undefined
+  );
+  const [jerseyWashState, jerseyWashAction, jerseyWashPending] = useActionState(
+    payJerseyWashAction,
     undefined
   );
 
@@ -118,6 +122,29 @@ export function PlayerPaymentCard({
               </button>
             </form>
             <PixResult state={caixinhaState} />
+          </div>
+
+          <div>
+            <p className="mb-2 text-sm text-foreground">Ajudar na lavagem dos coletes</p>
+            <form action={jerseyWashAction} className="flex flex-wrap items-center gap-2">
+              <input
+                name="amount"
+                type="number"
+                step="0.01"
+                min="1"
+                placeholder="Valor (R$)"
+                required
+                className="w-32 rounded-md border border-border px-3 py-2 text-sm"
+              />
+              <button
+                type="submit"
+                disabled={jerseyWashPending}
+                className="rounded-md border border-primary px-4 py-2 text-sm font-medium text-primary disabled:opacity-50"
+              >
+                {jerseyWashPending ? "Gerando Pix..." : "Contribuir"}
+              </button>
+            </form>
+            <PixResult state={jerseyWashState} />
           </div>
 
           <button

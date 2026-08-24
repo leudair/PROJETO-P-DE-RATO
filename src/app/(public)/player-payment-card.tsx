@@ -127,7 +127,10 @@ export function PlayerPaymentCard({
 
             <div>
               <p className="mb-2 text-sm text-foreground">Lavagem dos coletes</p>
-              <form action={jerseyWashAction} className="flex flex-wrap items-center gap-2">
+              <form
+                action={jerseyWashAction}
+                className="flex items-center gap-1.5 rounded-md border-2 border-accent bg-accent/10 p-1.5"
+              >
                 <input type="hidden" name="contributorName" value={player.name} />
                 <input
                   name="amount"
@@ -136,12 +139,12 @@ export function PlayerPaymentCard({
                   min="1"
                   placeholder="R$"
                   required
-                  className="w-16 rounded-md border border-border px-2 py-2 text-sm"
+                  className="w-14 min-w-0 rounded-md border border-border bg-surface px-2 py-2 text-sm"
                 />
                 <button
                   type="submit"
                   disabled={jerseyWashPending}
-                  className="rounded-md border border-primary px-3 py-2 text-sm font-medium text-primary disabled:opacity-50"
+                  className="flex-1 rounded-md bg-accent px-3 py-2 text-sm font-semibold text-accent-foreground disabled:opacity-50"
                 >
                   {jerseyWashPending ? "Gerando..." : "Contribuir"}
                 </button>
@@ -151,7 +154,7 @@ export function PlayerPaymentCard({
           </div>
 
           <div>
-            <p className="mb-2 text-sm text-foreground">Dar uma caixinha</p>
+            <p className="mb-2 text-sm text-foreground">Compra de bola e colete</p>
             <form action={caixinhaAction} className="flex flex-wrap items-center gap-2">
               <input
                 name="amount"

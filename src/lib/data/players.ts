@@ -15,8 +15,8 @@ export const CreatePlayerSchema = z.object({
     .union([z.enum(POSITIONS), z.literal("")])
     .optional()
     .transform((v) => (v ? v : null)),
-  age: z
-    .union([z.coerce.number().int().positive().max(99), z.literal("")])
+  birthDate: z
+    .union([z.string().date(), z.literal("")])
     .optional()
     .transform((v) => (v ? v : null)),
 });
@@ -53,7 +53,7 @@ export async function createPlayer(input: z.infer<typeof CreatePlayerSchema> & {
     name: input.name,
     phone: input.phone,
     position: input.position,
-    age: input.age,
+    birth_date: input.birthDate,
     photo_url: input.photoUrl,
   });
 
@@ -72,7 +72,7 @@ export async function updatePlayer(
       name: input.name,
       phone: input.phone,
       position: input.position,
-      age: input.age,
+      birth_date: input.birthDate,
       // so sobrescreve a foto quando uma nova foi enviada nesse submit
       ...(input.photoUrl ? { photo_url: input.photoUrl } : {}),
     })

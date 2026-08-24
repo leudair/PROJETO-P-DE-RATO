@@ -6,6 +6,7 @@ import { StatusBadge } from "@/components/status-badge";
 import { formatBRL } from "@/lib/utils/currency";
 import { POSITION_LABEL } from "@/lib/utils/positions";
 import { isVideoUrl } from "@/lib/utils/media";
+import { formatBirthDate } from "@/lib/utils/age";
 import type { PlayerPosition } from "@/lib/supabase/database.types";
 
 type PlayerStatus = "paid" | "pending" | "late" | "exempt";
@@ -20,6 +21,7 @@ export function PlayerPaymentCard({
     position: PlayerPosition | null;
     photoUrl: string | null;
     age: number | null;
+    birthDate: string | null;
     status: PlayerStatus;
     daysLate: number;
   };
@@ -58,23 +60,33 @@ export function PlayerPaymentCard({
 
       {open && (
         <div className="space-y-5 border-t border-border p-4">
-          {player.photoUrl && (
-            <div className="mx-auto h-40 w-32 overflow-hidden rounded-lg bg-surface-2">
-              {isVideoUrl(player.photoUrl) ? (
-                <video
-                  src={player.photoUrl}
-                  className="h-full w-full object-contain"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                />
-              ) : (
-                // eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao
-                <img src={player.photoUrl} alt={player.name} className="h-full w-full object-contain" />
+          <div className="flex h-32 overflow-hidden rounded-lg border border-border bg-surface-2 sm:h-36">
+            {player.photoUrl && (
+              <div className="w-2/5 shrink-0 overflow-hidden bg-black/10">
+                {isVideoUrl(player.photoUrl) ? (
+                  <video
+                    src={player.photoUrl}
+                    className="h-full w-full object-cover"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                  />
+                ) : (
+                  // eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao
+                  <img src={player.photoUrl} alt={player.name} className="h-full w-full object-cover" />
+                )}
+              </div>
+            )}
+            <div className="flex min-w-0 flex-1 flex-col justify-center gap-0.5 p-3">
+              <p className="truncate text-base font-bold text-foreground">{player.name}</p>
+              {player.position && <p className="text-sm text-muted">{POSITION_LABEL[player.position]}</p>}
+              {player.age && <p className="text-sm text-muted">{player.age} anos</p>}
+              {player.birthDate && (
+                <p className="text-xs text-muted">Nasc. {formatBirthDate(player.birthDate)}</p>
               )}
             </div>
-          )}
+          </div>
 
           {!isGoalkeeper && (
             <div>

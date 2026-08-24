@@ -28,7 +28,7 @@ export async function createPlayerAction(
     name: formData.get("name"),
     phone: formData.get("phone"),
     position: formData.get("position"),
-    age: formData.get("age"),
+    birthDate: formData.get("birthDate"),
   });
 
   if (!parsed.success) {
@@ -63,7 +63,7 @@ export async function updatePlayerAction(
     name: formData.get("name"),
     phone: formData.get("phone"),
     position: formData.get("position"),
-    age: formData.get("age"),
+    birthDate: formData.get("birthDate"),
   });
 
   if (!parsed.success) {

@@ -3,6 +3,7 @@ import { listPlayers } from "@/lib/data/players";
 import { ToggleActiveButton } from "./toggle-active-button";
 import { POSITION_LABEL } from "@/lib/utils/positions";
 import { isVideoUrl } from "@/lib/utils/media";
+import { calculateAge } from "@/lib/utils/age";
 
 export default async function PlayersPage() {
   const players = await listPlayers();
@@ -64,7 +65,9 @@ export default async function PlayersPage() {
                 <td className="px-4 py-3 text-muted">
                   {player.position ? POSITION_LABEL[player.position] : "—"}
                 </td>
-                <td className="px-4 py-3 text-muted">{player.age ?? "—"}</td>
+                <td className="px-4 py-3 text-muted">
+                  {player.birth_date ? `${calculateAge(player.birth_date)} anos` : "—"}
+                </td>
                 <td className="px-4 py-3 text-muted">{player.phone ?? "—"}</td>
                 <td className="px-4 py-3">
                   <span className={player.active ? "text-success" : "text-muted"}>

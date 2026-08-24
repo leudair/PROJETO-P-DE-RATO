@@ -75,7 +75,7 @@ export interface Database {
           phone: string | null;
           position: PlayerPosition | null;
           photo_url: string | null;
-          age: number | null;
+          birth_date: string | null;
           active: boolean;
           created_at: string;
         };
@@ -85,7 +85,7 @@ export interface Database {
           phone?: string | null;
           position?: PlayerPosition | null;
           photo_url?: string | null;
-          age?: number | null;
+          birth_date?: string | null;
           active?: boolean;
           created_at?: string;
         };
@@ -95,7 +95,7 @@ export interface Database {
           phone?: string | null;
           position?: PlayerPosition | null;
           photo_url?: string | null;
-          age?: number | null;
+          birth_date?: string | null;
           active?: boolean;
           created_at?: string;
         };

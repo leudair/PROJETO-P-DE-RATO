@@ -15,7 +15,7 @@ export default async function EditPlayerPage({ params }: { params: Promise<{ id:
           name: player.name,
           phone: player.phone,
           position: player.position,
-          age: player.age,
+          birthDate: player.birth_date,
           photoUrl: player.photo_url,
         }}
       />

@@ -16,7 +16,7 @@ export function PlayerForm({
     name: string;
     phone: string | null;
     position: PlayerPosition | null;
-    age: number | null;
+    birthDate: string | null;
     photoUrl: string | null;
   };
 }) {
@@ -66,15 +66,14 @@ export function PlayerForm({
           <p className="text-xs text-muted">Goleiro fica isento da mensalidade automaticamente.</p>
         </div>
         <div className="space-y-1">
-          <label className="text-xs font-medium text-foreground">Idade (opcional)</label>
+          <label className="text-xs font-medium text-foreground">Data de nascimento (opcional)</label>
           <input
-            name="age"
-            type="number"
-            min="1"
-            max="99"
-            defaultValue={defaultValues?.age ?? ""}
+            name="birthDate"
+            type="date"
+            defaultValue={defaultValues?.birthDate ?? ""}
             className="w-full rounded-md border border-border px-3 py-2 text-sm"
           />
+          <p className="text-xs text-muted">A idade é calculada automaticamente a partir daqui.</p>
         </div>
       </div>
 

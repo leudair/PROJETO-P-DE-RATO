@@ -1,6 +1,7 @@
 import "server-only";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { currentReferenceMonth } from "@/lib/utils/month";
+import { calculateAge } from "@/lib/utils/age";
 
 function isInCurrentCalendarMonth(iso: string): boolean {
   const now = new Date();
@@ -43,7 +44,7 @@ export async function getPublicStatus() {
       .single(),
     admin
       .from("players")
-      .select("id, name, position, photo_url, age")
+      .select("id, name, position, photo_url, birth_date")
       .eq("active", true)
       .order("name", { ascending: true }),
     // sem filtro de reference_month aqui: mensalidade usa reference_month,
@@ -96,7 +97,8 @@ export async function getPublicStatus() {
         name: player.name,
         position: player.position,
         photoUrl: player.photo_url,
-        age: player.age,
+        birthDate: player.birth_date,
+        age: player.birth_date ? calculateAge(player.birth_date) : null,
         status,
         daysLate: status === "late" ? lateDays : 0,
       };

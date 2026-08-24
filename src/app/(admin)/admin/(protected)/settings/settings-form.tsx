@@ -13,6 +13,7 @@ export function SettingsForm({
     bannerImageUrl: string | null;
     crestImageUrl: string | null;
     topBannerUrl: string | null;
+    pickupGameBannerUrl: string | null;
   };
 }) {
   const [state, formAction, pending] = useActionState(updateSettingsAction, undefined);
@@ -79,6 +80,28 @@ export function SettingsForm({
         <p className="text-xs text-muted">
           PNG, JPEG, WEBP ou GIF, até 5MB. Faixa fina no topo da página pública — espaço reservado pra
           divulgar patrocinador no futuro. Deixe em branco pra não mostrar nada.
+        </p>
+      </div>
+
+      <div className="space-y-1">
+        <label className="text-xs font-medium text-foreground">Banner do jogo de onze</label>
+        {defaultValues.pickupGameBannerUrl && (
+          // eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao
+          <img
+            src={defaultValues.pickupGameBannerUrl}
+            alt="Banner do jogo de onze atual"
+            className="mb-2 h-24 w-full rounded-md object-cover"
+          />
+        )}
+        <input
+          name="pickupGameBannerImage"
+          type="file"
+          accept="image/png,image/jpeg,image/webp,image/gif"
+          className="w-full rounded-md border border-border px-3 py-2 text-sm"
+        />
+        <p className="text-xs text-muted">
+          PNG, JPEG, WEBP ou GIF, até 5MB. Aparece logo abaixo do cabeçalho — use pra divulgar quando tiver
+          um jogo de onze marcado. Deixe em branco pra não mostrar nada.
         </p>
       </div>
 

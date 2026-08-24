@@ -16,6 +16,7 @@ export default async function PublicStatusPage() {
     bannerImageUrl,
     crestImageUrl,
     topBannerUrl,
+    pickupGameBannerUrl,
     defaultMensalidadeAmount,
     referenceMonth,
     players,
@@ -48,23 +49,14 @@ export default async function PublicStatusPage() {
         <ThemeToggle />
       </div>
 
-      <div className="mb-6 grid grid-cols-2 gap-2 sm:mb-8 sm:gap-3">
-        <ExtraFundBanner
-          emoji="⚽"
-          title="Jogo avulso"
-          description="Racha com time sorteado na hora. Contribua a partir de R$20."
-          minAmount={20}
-          buttonLabel="Contribuir"
-          action={payPickupGameAction}
+      {pickupGameBannerUrl && (
+        // eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao
+        <img
+          src={pickupGameBannerUrl}
+          alt="Jogo de onze"
+          className="mb-6 h-32 w-full rounded-xl object-cover sm:mb-8 sm:h-44"
         />
-        <ExtraFundBanner
-          emoji="🧺"
-          title="Coletes"
-          description="Caixinha pra pagar quem lava os coletes do time."
-          buttonLabel="Contribuir"
-          action={payJerseyWashAction}
-        />
-      </div>
+      )}
 
       <div className="mb-6 sm:mb-8">
         <PlayersList players={players} defaultMensalidadeAmount={defaultMensalidadeAmount} />
@@ -84,7 +76,7 @@ export default async function PublicStatusPage() {
         </div>
       )}
 
-      <div className="rounded-xl border border-border bg-surface p-4 text-sm">
+      <div className="mb-6 rounded-xl border border-border bg-surface p-4 text-sm sm:mb-8">
         <div className="flex justify-between py-1">
           <span className="text-muted">Mensalidades pagas</span>
           <span className="text-foreground">{formatBRL(totals.mensalidade)}</span>
@@ -123,11 +115,29 @@ export default async function PublicStatusPage() {
         </div>
       </div>
 
+      <div className="mb-6 space-y-3 sm:mb-8">
+        <ExtraFundBanner
+          emoji="⚽"
+          title="Jogo avulso"
+          description="Racha com time sorteado na hora. Contribua a partir de R$20."
+          minAmount={20}
+          buttonLabel="Contribuir pro jogo avulso"
+          action={payPickupGameAction}
+        />
+        <ExtraFundBanner
+          emoji="🧺"
+          title="Coletes"
+          description="Caixinha pra pagar quem lava os coletes do time."
+          buttonLabel="Contribuir pra lavagem"
+          action={payJerseyWashAction}
+        />
+      </div>
+
       {bannerImageUrl &&
         (isVideoUrl(bannerImageUrl) ? (
           <video
             src={bannerImageUrl}
-            className="mt-6 h-36 w-full rounded-xl object-cover sm:mt-8 sm:h-56"
+            className="mb-6 h-36 w-full rounded-xl object-cover sm:mb-8 sm:h-56"
             autoPlay
             loop
             muted
@@ -138,7 +148,7 @@ export default async function PublicStatusPage() {
           <img
             src={bannerImageUrl}
             alt=""
-            className="mt-6 h-36 w-full rounded-xl object-cover sm:mt-8 sm:h-56"
+            className="mb-6 h-36 w-full rounded-xl object-cover sm:mb-8 sm:h-56"
           />
         ))}
 

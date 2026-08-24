@@ -14,6 +14,7 @@ export default async function SettingsPage() {
           bannerImageUrl: settings.banner_image_url,
           crestImageUrl: settings.crest_image_url,
           topBannerUrl: settings.top_banner_url,
+          pickupGameBannerUrl: settings.pickup_game_banner_url,
         }}
       />
     </div>

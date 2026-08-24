@@ -58,8 +58,27 @@ export async function updateSettingsAction(
     }
   }
 
+  let pickupGameBannerUrl: string | undefined;
+  const pickupGameBannerFile = formData.get("pickupGameBannerImage");
+  if (pickupGameBannerFile instanceof File && pickupGameBannerFile.size > 0) {
+    try {
+      pickupGameBannerUrl = await uploadPublicImage(pickupGameBannerFile, "pickup-game-banners");
+    } catch (err) {
+      if (err instanceof InvalidImageError) {
+        return { error: err.message };
+      }
+      return { error: "Não foi possível enviar o banner do jogo de onze." };
+    }
+  }
+
   try {
-    await updateTeamSettings({ ...parsed.data, bannerImageUrl, crestImageUrl, topBannerUrl });
+    await updateTeamSettings({
+      ...parsed.data,
+      bannerImageUrl,
+      crestImageUrl,
+      topBannerUrl,
+      pickupGameBannerUrl,
+    });
   } catch {
     return { error: "Não foi possível salvar." };
   }

@@ -21,6 +21,7 @@ export async function updateTeamSettings(
     bannerImageUrl?: string;
     crestImageUrl?: string;
     topBannerUrl?: string;
+    pickupGameBannerUrl?: string;
   }
 ) {
   await requireAdmin();
@@ -37,6 +38,7 @@ export async function updateTeamSettings(
       ...(input.bannerImageUrl ? { banner_image_url: input.bannerImageUrl } : {}),
       ...(input.crestImageUrl ? { crest_image_url: input.crestImageUrl } : {}),
       ...(input.topBannerUrl ? { top_banner_url: input.topBannerUrl } : {}),
+      ...(input.pickupGameBannerUrl ? { pickup_game_banner_url: input.pickupGameBannerUrl } : {}),
       updated_at: new Date().toISOString(),
     })
     .eq("id", 1);

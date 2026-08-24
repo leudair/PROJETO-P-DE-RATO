@@ -1,12 +1,14 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { payCaixinhaAction, payJerseyWashAction, payMensalidadeAction, type PayState } from "./actions";
+import { payCaixinhaAction, payMensalidadeAction, type PayState } from "./actions";
 import { StatusBadge } from "@/components/status-badge";
 import { formatBRL } from "@/lib/utils/currency";
 import { POSITION_LABEL } from "@/lib/utils/positions";
 import { isVideoUrl } from "@/lib/utils/media";
 import type { PlayerPosition } from "@/lib/supabase/database.types";
+
+type PlayerStatus = "paid" | "pending" | "late" | "exempt";
 
 export function PlayerPaymentCard({
   player,
@@ -18,7 +20,7 @@ export function PlayerPaymentCard({
     position: PlayerPosition | null;
     photoUrl: string | null;
     age: number | null;
-    status: "paid" | "pending" | "late" | "exempt";
+    status: PlayerStatus;
     daysLate: number;
   };
   defaultMensalidadeAmount: number;
@@ -33,10 +35,6 @@ export function PlayerPaymentCard({
     payCaixinhaAction.bind(null, player.id),
     undefined
   );
-  const [jerseyWashState, jerseyWashAction, jerseyWashPending] = useActionState(
-    payJerseyWashAction,
-    undefined
-  );
 
   return (
     <div className={`overflow-hidden rounded-xl border border-border bg-surface ${open ? "col-span-2" : ""}`}>
@@ -45,7 +43,7 @@ export function PlayerPaymentCard({
         onClick={() => setOpen((v) => !v)}
         className="flex w-full items-center gap-3 px-3 py-3 text-left"
       >
-        <PlayerThumb name={player.name} photoUrl={player.photoUrl} />
+        <PlayerThumb name={player.name} photoUrl={player.photoUrl} status={player.status} />
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-medium text-foreground">{player.name}</p>
           <p className="text-xs text-muted">
@@ -125,29 +123,6 @@ export function PlayerPaymentCard({
             <PixResult state={caixinhaState} />
           </div>
 
-          <div>
-            <p className="mb-2 text-sm text-foreground">Ajudar na lavagem dos coletes</p>
-            <form action={jerseyWashAction} className="flex flex-wrap items-center gap-2">
-              <input
-                name="amount"
-                type="number"
-                step="0.01"
-                min="1"
-                placeholder="Valor (R$)"
-                required
-                className="w-32 rounded-md border border-border px-3 py-2 text-sm"
-              />
-              <button
-                type="submit"
-                disabled={jerseyWashPending}
-                className="rounded-md border border-primary px-4 py-2 text-sm font-medium text-primary disabled:opacity-50"
-              >
-                {jerseyWashPending ? "Gerando Pix..." : "Contribuir"}
-              </button>
-            </form>
-            <PixResult state={jerseyWashState} />
-          </div>
-
           <button
             type="button"
             onClick={() => setOpen(false)}
@@ -161,30 +136,51 @@ export function PlayerPaymentCard({
   );
 }
 
-function PlayerThumb({ name, photoUrl }: { name: string; photoUrl: string | null }) {
-  if (photoUrl) {
-    return (
-      <div className="h-12 w-12 shrink-0 overflow-hidden rounded-full bg-surface-2">
-        {isVideoUrl(photoUrl) ? (
-          <video src={photoUrl} className="h-full w-full object-cover" muted playsInline />
-        ) : (
-          // eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao
-          <img src={photoUrl} alt={name} className="h-full w-full object-cover" />
-        )}
-      </div>
-    );
-  }
+const STATUS_DOT: Record<PlayerStatus, { icon: string; className: string }> = {
+  paid: { icon: "✓", className: "bg-success text-success-foreground" },
+  late: { icon: "!", className: "bg-red-600 text-white" },
+  pending: { icon: "•", className: "bg-pending text-pending-foreground" },
+  exempt: { icon: "–", className: "bg-muted text-background" },
+};
 
-  const initials = name
-    .split(" ")
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase())
-    .join("");
+function PlayerThumb({
+  name,
+  photoUrl,
+  status,
+}: {
+  name: string;
+  photoUrl: string | null;
+  status: PlayerStatus;
+}) {
+  const dot = STATUS_DOT[status];
 
   return (
-    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-surface-2 text-sm font-medium text-muted">
-      {initials}
-    </span>
+    <div className="relative h-12 w-12 shrink-0">
+      {photoUrl ? (
+        <div className="h-12 w-12 overflow-hidden rounded-full bg-surface-2">
+          {isVideoUrl(photoUrl) ? (
+            <video src={photoUrl} className="h-full w-full object-cover" muted playsInline />
+          ) : (
+            // eslint-disable-next-line @next/next/no-img-element -- imagem enviada pelo admin, sem largura/altura conhecida de antemao
+            <img src={photoUrl} alt={name} className="h-full w-full object-cover" />
+          )}
+        </div>
+      ) : (
+        <span className="flex h-12 w-12 items-center justify-center rounded-full bg-surface-2 text-sm font-medium text-muted">
+          {name
+            .split(" ")
+            .slice(0, 2)
+            .map((part) => part[0]?.toUpperCase())
+            .join("")}
+        </span>
+      )}
+      <span
+        className={`absolute -bottom-0.5 -right-0.5 flex h-5 w-5 items-center justify-center rounded-full border-2 border-surface text-xs font-bold ${dot.className}`}
+        title={status}
+      >
+        {dot.icon}
+      </span>
+    </div>
   );
 }
 

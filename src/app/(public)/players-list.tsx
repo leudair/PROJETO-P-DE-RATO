@@ -10,7 +10,8 @@ type Player = {
   position: PlayerPosition | null;
   photoUrl: string | null;
   age: number | null;
-  status: "paid" | "pending" | "exempt";
+  status: "paid" | "pending" | "late" | "exempt";
+  daysLate: number;
 };
 
 const INITIAL_COUNT = 10;

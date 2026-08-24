@@ -18,7 +18,8 @@ export function PlayerPaymentCard({
     position: PlayerPosition | null;
     photoUrl: string | null;
     age: number | null;
-    status: "paid" | "pending" | "exempt";
+    status: "paid" | "pending" | "late" | "exempt";
+    daysLate: number;
   };
   defaultMensalidadeAmount: number;
 }) {
@@ -52,7 +53,7 @@ export function PlayerPaymentCard({
             {player.age ? ` · ${player.age} anos` : ""}
           </p>
           <div className="pt-1">
-            <StatusBadge status={player.status} />
+            <StatusBadge status={player.status} daysLate={player.daysLate} />
           </div>
         </div>
       </button>

@@ -8,6 +8,15 @@ function isInCurrentCalendarMonth(iso: string): boolean {
   return d.getUTCFullYear() === now.getUTCFullYear() && d.getUTCMonth() === now.getUTCMonth();
 }
 
+// Janela de pagamento da mensalidade: dia 5 ao dia 10 do mes. Quem nao
+// pagou ate o dia 10 comeca a contar atraso a partir do dia 11 (dia 11 =
+// 1 dia em atraso).
+const PAYMENT_DUE_DAY = 10;
+
+function daysLate(): number {
+  return Math.max(0, new Date().getDate() - PAYMENT_DUE_DAY);
+}
+
 // Leitura exclusiva para a pagina publica de status. So server-only, so
 // client admin (service_role) — nunca importar em um "use client". Seleciona
 // EXPLICITAMENTE apenas colunas seguras: nunca phone, mercado_pago_payment_id,
@@ -62,25 +71,32 @@ export async function getPublicStatus() {
       .map((p) => [p.player_id, p])
   );
 
-  // Quem ainda nao pagou aparece primeiro (prioridade de cobranca visual);
-  // isento (goleiro) fica no meio; quem ja pagou vai pro final da lista.
-  const STATUS_ORDER = { pending: 0, exempt: 1, paid: 2 };
+  // Quem esta em atraso aparece primeiro (maxima prioridade de cobranca),
+  // depois quem ainda nao pagou mas dentro do prazo, isento no meio, quem
+  // ja pagou vai pro final da lista.
+  const STATUS_ORDER = { late: 0, pending: 1, exempt: 2, paid: 3 };
+  const lateDays = daysLate();
 
   const playerStatus = players
     .map((player) => {
       const payment = mensalidadeByPlayer.get(player.id);
       const isGoalkeeper = player.position === "goleiro";
+      const isPaid = payment?.status === "paid";
+      const status = isGoalkeeper
+        ? ("exempt" as const)
+        : isPaid
+          ? ("paid" as const)
+          : lateDays > 0
+            ? ("late" as const)
+            : ("pending" as const);
       return {
         id: player.id,
         name: player.name,
         position: player.position,
         photoUrl: player.photo_url,
         age: player.age,
-        status: isGoalkeeper
-          ? ("exempt" as const)
-          : payment?.status === "paid"
-            ? ("paid" as const)
-            : ("pending" as const),
+        status,
+        daysLate: status === "late" ? lateDays : 0,
       };
     })
     .sort((a, b) => STATUS_ORDER[a.status] - STATUS_ORDER[b.status] || a.name.localeCompare(b.name));

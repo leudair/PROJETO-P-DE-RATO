@@ -1,6 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState } from "react";
+import { useSearchParams } from "next/navigation";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { login } from "./actions";
 
@@ -12,6 +14,8 @@ export function LoginForm({
   crestImageUrl: string | null;
 }) {
   const [state, formAction, pending] = useActionState(login, undefined);
+  const searchParams = useSearchParams();
+  const linkInvalido = searchParams.get("erro") === "link_invalido";
 
   return (
     <main className="relative flex min-h-screen items-center justify-center bg-background px-4">
@@ -36,6 +40,12 @@ export function LoginForm({
             <h1 className="text-xl font-semibold text-foreground">Caixa do Time</h1>
             <p className="text-sm text-muted">Entre com sua conta de admin para continuar.</p>
           </div>
+
+          {linkInvalido && (
+            <p className="text-sm text-red-600">
+              Esse link de redefinição de senha é inválido ou expirou. Peça um novo em &quot;Esqueci minha senha&quot;.
+            </p>
+          )}
 
           <div className="space-y-1">
             <label htmlFor="email" className="text-sm font-medium text-foreground">
@@ -74,6 +84,10 @@ export function LoginForm({
           >
             {pending ? "Entrando..." : "Entrar"}
           </button>
+
+          <Link href="/admin/esqueci-senha" className="block text-center text-sm text-muted hover:text-foreground">
+            Esqueci minha senha
+          </Link>
         </form>
       </div>
     </main>

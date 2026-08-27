@@ -67,6 +67,17 @@ migrations + `db: { schema: ... }` nos 3 clients em `src/lib/supabase/`.
    si é feito pelo admin (via service_role, bypassa RLS de storage) — não
    precisa configurar policy nenhuma no bucket.
 
+## Checklist: Recuperação de senha ("Esqueci minha senha")
+
+1. Em **Authentication > URL Configuration**, confira se **Site URL** está com o domínio de produção (não `http://localhost:3000`).
+2. Em **Authentication > Email Templates > Reset Password**, troque o link do template para usar `{{ .TokenHash }}` em vez de `{{ .ConfirmationURL }}` — isso faz o link ir direto para a rota da aplicação (`/api/auth/confirm`) em vez de passar pelo domínio do próprio Supabase, e funciona mesmo se o link for aberto num aparelho diferente do que pediu a redefinição:
+   ```html
+   <a href="{{ .SiteURL }}/api/auth/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/admin/redefinir-senha">Redefinir senha</a>
+   ```
+3. Sem SMTP customizado configurado (Authentication > Emails > SMTP Settings), o Supabase usa um serviço de email próprio bem limitado — recomendado configurar um provedor (ex: Resend) ali para os emails serem entregues de forma confiável.
+
+Sem o ajuste no template, o Supabase continua usando o link padrão (`{{ .ConfirmationURL }}`), que pode falhar se o link for aberto num navegador/aparelho diferente de onde a redefinição foi pedida.
+
 ## Checklist: Mercado Pago (fica para o final)
 
 Sem essas variáveis, o botão "Gerar Pix" mostra um aviso amigável (não
